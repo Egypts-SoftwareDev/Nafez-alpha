@@ -1,0 +1,490 @@
+/*
+ * Styles for the Nafez alpha prototype home page.
+ *
+ * This stylesheet defines a dark-themed layout inspired by the provided
+ * mockup. The page is split into a left content area for projects and a
+ * right column reserved for advertisements. Color variables are used to
+ * make it easy to tweak the palette globally.
+ */
+
+/* Color palette variables */
+:root {
+  --primary: #cfe468; /* lime green accents */
+  --secondary: #0a1522; /* dark navy background */
+  --card-bg: #ffffff; /* white card backgrounds */
+  --text-dark: #0a1522; /* dark text inside cards */
+  --text-light: #f5f5f5; /* light text on dark backgrounds */
+  --muted: #8fa1b2; /* muted grey for secondary text */
+  --border: #e6e6e6; /* light grey border for cards */
+  --progress-bg: #e6f0c4; /* light green progress bar background */
+  --progress-fill: #cfe468; /* progress bar fill */
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--secondary);
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* Navigation bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-link {
+  color: var(--text-light);
+  text-decoration: none;
+  margin: 0 0.5rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: var(--primary);
+}
+
+.separator {
+  margin: 0 0.5rem;
+  color: var(--muted);
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nafez-logo {
+  width: clamp(120px, 15vw, 240px);
+  height: auto;
+}
+
+/* Main container layout */
+.main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  gap: 1rem;
+}
+
+.content-left {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.content-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* View/filter/search bar */
+.view-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Highlight the currently selected view toggle button */
+.view-toggle .icon-btn.selected {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.icon-btn {
+  background-color: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.icon-btn img {
+  width: 20px;
+  height: 20px;
+  filter: invert(96%) sepia(5%) saturate(154%) hue-rotate(182deg) brightness(90%) contrast(95%);
+}
+
+.icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.filter-labels {
+  display: flex;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.filter {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.filter.active {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+}
+
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  max-width: 400px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: none;
+  color: var(--text-light);
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: var(--muted);
+}
+
+/* Category placeholder cards */
+.categories-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.category-card {
+  flex: 1;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+/*
+ * Campaigns container
+ *
+ * Cards are rendered dynamically into this container.  By default we
+ * display them in a responsive grid layout using CSS grid.  When
+ * toggled into list view via JavaScript, we switch to a vertical flex
+ * layout.  Additional classes (`list`) are applied to the container
+ * and its children to adjust the orientation of each card.
+ */
+
+#campaigns-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* List view overrides: stack cards vertically */
+#campaigns-container.list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Default card orientation: columnar for grid view. */
+#campaigns-container .campaign-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* When in list view, orient the card horizontally like the original mockup. */
+#campaigns-container.list .campaign-card {
+  flex-direction: row;
+}
+
+/* Campaign card styles */
+.campaign-card {
+  display: flex;
+  /* Column orientation by default for grid view.  This is overridden
+     when the container has the `.list` class. */
+  flex-direction: column;
+  background-color: var(--card-bg);
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.campaign-media {
+  position: relative;
+  /* In grid (column) view, the media spans full width */
+  flex: none;
+  width: 100%;
+}
+
+.campaign-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.stage-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: var(--secondary);
+  color: var(--primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.campaign-info {
+  flex: none;
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* In list view, restore the original horizontal proportions */
+#campaigns-container.list .campaign-media {
+  flex: 1 1 40%;
+  width: auto;
+}
+
+#campaigns-container.list .campaign-info {
+  flex: 1 1 60%;
+  width: auto;
+}
+
+.campaign-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.creator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.campaign-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.funding-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.raised { color: var(--secondary); }
+.backers { color: var(--secondary); }
+.percentage { color: var(--primary); }
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--progress-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: var(--progress-fill);
+}
+
+.deadline-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.shipping-info {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.shipping-label {
+  color: var(--secondary);
+  font-weight: 500;
+  margin-right: 0.25rem;
+}
+
+.rewards-btn {
+  align-self: flex-start;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary);
+  color: var(--primary);
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.rewards-btn:hover {
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+/* Ad spaces */
+.ad-space {
+  flex: 1;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+/* ---------------------------------------------------------------------
+   Footer styles (borrowed from the landing page)
+
+   We reuse the same footer component from the main landing page for
+   consistency across the platform.  The footer consists of two
+   sections: a top row of informational columns and a bottom bar
+   containing copyright and legal links.  Color variables are used
+   throughout to harmonize with the alpha theme.
+--------------------------------------------------------------------- */
+
+footer {
+  width: 100%;
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  background-color: var(--secondary);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+.footer-links .column {
+  min-width: 140px;
+}
+
+.footer-links h4 {
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.25rem;
+}
+
+.footer-links ul li a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.footer-links ul li a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.bottom-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.bottom-bar a {
+  color: var(--secondary);
+  margin: 0 0.5rem;
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.bottom-bar a:hover {
+  text-decoration: underline;
+}
+
+.bottom-bar .bottom-left,
+.bottom-bar .bottom-middle,
+.bottom-bar .bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bottom-bar .bottom-left img.bottom-logo {
+  max-width: 60px;
+  height: auto;
+}
+
+.bottom-bar .sss-footer-logo {
+  max-width: 80px;
+  height: auto;
+  margin-left: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .main-container {
+    flex-direction: column;
+  }
+  .content-right {
+    flex-direction: row;
+    width: 100%;
+  }
+  .ad-space {
+    height: 120px;
+  }
+}

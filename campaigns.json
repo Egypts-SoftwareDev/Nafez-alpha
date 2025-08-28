@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "Pyrasound V1",
+    "description": "The Egyptian-made home theatre system. Support local production and pre-order this 100% Egyptian full surround-sound Dolby Atmos approved home theatre system.",
+    "goal": 50000,
+    "raised": 22648,
+    "backers": 47,
+    "stage": "Concept"
+  },
+  {
+    "id": 2,
+    "title": "Solar Water Purifier",
+    "description": "A portable solar-powered water purification device designed for remote villages. Help us provide clean water to those in need.",
+    "goal": 30000,
+    "raised": 12000,
+    "backers": 20,
+    "stage": "Prototype"
+  }
+]

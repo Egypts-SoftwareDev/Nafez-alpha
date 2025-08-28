@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nafez Alpha – Home</title>
+    <!-- Main stylesheet for alpha prototype -->
+    <!-- Note: static assets are served from /alpha/public/ on the server -->
+    <link rel="stylesheet" href="/alpha/public/css/styles.css" />
+    <link rel="icon" type="image/png" href="/alpha/public/images/nafez-logo.png" />
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <header class="navbar">
+      <div class="nav-left">
+        <a href="#" class="nav-link">Start a campaign</a>
+      </div>
+      <div class="nav-center">
+        <!-- Centered Nafez logo -->
+        <img src="/alpha/public/images/nafez-logo.png" alt="Nafez logo" class="nafez-logo" />
+      </div>
+      <div class="nav-right">
+        <a href="#" class="nav-link">How it works</a>
+        <span class="separator">|</span>
+        <a href="#" class="nav-link">Sign in</a>
+      </div>
+    </header>
+
+    <!-- Main content container -->
+    <main class="main-container">
+      <div class="content-left">
+        <!-- View toggles and filter bar -->
+        <div class="view-filter-bar">
+          <div class="view-toggle">
+            <button class="icon-btn" title="List view">
+              <img src="/alpha/public/images/list-icon.png" alt="List view" />
+            </button>
+            <button class="icon-btn" title="Grid view">
+              <img src="/alpha/public/images/grid-icon.png" alt="Grid view" />
+            </button>
+          </div>
+          <div class="filter-labels">
+            <span class="filter active">Featured</span>
+            <span class="filter">Backed</span>
+          </div>
+          <div class="search-bar">
+            <button class="icon-btn" title="Previous">
+              <img src="/alpha/public/images/arrow-left.png" alt="Prev" />
+            </button>
+            <input type="text" placeholder="Search projects..." />
+            <button class="icon-btn" title="Next">
+              <img src="/alpha/public/images/arrow-right.png" alt="Next" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Placeholder categories row -->
+        <div class="categories-row">
+          <div class="category-card"></div>
+          <div class="category-card"></div>
+          <div class="category-card"></div>
+          <div class="category-card"></div>
+        </div>
+
+        <!-- Campaign cards will be dynamically rendered into this container
+             by the script.  See public/js/script.js for details. -->
+        <div id="campaigns-container" class="campaigns"></div>
+      </div>
+      <div class="content-right">
+        <!-- Ad spaces on the right side -->
+        <div class="ad-space"></div>
+        <div class="ad-space"></div>
+      </div>
+    </main>
+
+    <!-- JavaScript for any interactive behaviour (optional) -->
+    <script src="/alpha/public/js/script.js"></script>
+    <!-- Reuse the same footer from the landing page to provide
+         consistent navigation and legal links across the platform. -->
+    <footer>
+      <div class="footer-links">
+        <div class="column">
+          <h4>Discover</h4>
+          <ul>
+            <li><a href="#">Crowdfunding</a></li>
+            <li><a href="#">Fixed vs Flexible</a></li>
+            <li><a href="#">Intizam</a></li>
+          </ul>
+        </div>
+        <div class="column">
+          <h4>About</h4>
+          <ul>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Trust &amp; Safety</a></li>
+            <li><a href="#">Help &amp; Support</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="column">
+          <h4>Entrepreneurs</h4>
+          <ul>
+            <li><a href="#">How it works</a></li>
+            <li><a href="#">Us vs Competitors</a></li>
+            <li><a href="#">Education Center</a></li>
+          </ul>
+        </div>
+        <div class="column signup-inline">
+          <h4>Stay informed</h4>
+          <p>Get updates and news.</p>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <div class="bottom-left">
+          <img src="/alpha/public/images/nafez-logo.png" alt="Nafez small logo" class="bottom-logo" />
+          <span>&copy; <span id="year-alpha"></span> Nafez &amp; Co. All rights reserved.</span>
+        </div>
+        <div class="bottom-middle">
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+          <a href="#">Accessibility</a>
+        </div>
+        <div class="bottom-right">
+          Powered by
+          <img src="/alpha/public/images/sss-logo.png" alt="Sam Software Solutions logo" class="sss-footer-logo" />
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
