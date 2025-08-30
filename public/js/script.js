@@ -23,8 +23,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Sample campaigns.  In a real app this data would come from an API.
-  const campaigns = [
+  // Local sample data used as a fallback if the API is unavailable.
+  let campaigns = [
     {
       id: 1,
       title: 'Pyrasound V1',
@@ -65,6 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
       isFeatured: false,
     },
   ];
+
+  // Try to replace sample data with API data
+  (async function fetchCampaigns() {
+    try {
+      const res = await fetch('/alpha/api/campaigns', { credentials: 'same-origin' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.campaigns)) campaigns = data.campaigns;
+      }
+    } catch (e) {
+      // keep fallback sample data silently
+    }
+  })();
 
   // Global state for UI controls
   let currentView = 'grid'; // 'grid' or 'list'

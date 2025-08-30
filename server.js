@@ -460,6 +460,27 @@ const server = http.createServer((req, res) => {
     res.end();
     return;
   }
+  // Read-only API endpoints (authenticated)
+  if (req.method === 'GET' && parsedUrl.pathname === '/alpha/api/campaigns') {
+    const campaigns = readCampaigns();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ campaigns }));
+    return;
+  }
+  const apiMatch = parsedUrl.pathname.match(/^\/alpha\/api\/campaigns\/(\d+)$/);
+  if (req.method === 'GET' && apiMatch) {
+    const id = parseInt(apiMatch[1], 10);
+    const campaigns = readCampaigns();
+    const campaign = campaigns.find((c) => c.id === id);
+    if (!campaign) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Not found' }));
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ campaign }));
+    return;
+  }
   // Authenticated routes
   if (req.method === 'GET' && parsedUrl.pathname === '/alpha/home') {
     // Serve the UI home page.  Instead of rendering a server-side list
