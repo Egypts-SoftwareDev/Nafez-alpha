@@ -1,4 +1,4 @@
-/*
+﻿/*
  * JavaScript for the Nafez alpha homepage.
  *
  * This script adds basic interactivity for the prototype, including
@@ -207,3 +207,83 @@ document.addEventListener('DOMContentLoaded', () => {
     yearAlpha.textContent = new Date().getFullYear();
   }
 });
+
+  // --- Simple hash router ---
+  const viewHome = document.getElementById('view-home');
+  const viewNew = document.getElementById('view-new');
+  const viewCampaign = document.getElementById('view-campaign');
+  const detailRoot = document.getElementById('campaign-detail');
+
+  function show(el){ if(el) el.removeAttribute('hidden'); }
+  function hide(el){ if(el) el && el.setAttribute('hidden',''); }
+
+  function renderCampaignDetail(id){
+    const c = campaigns.find((x)=> String(x.id) === String(id));
+    if(!c){ if(detailRoot) detailRoot.innerHTML = '<p>Campaign not found.</p>'; return; }
+    const pct = c.goal ? Math.min(100, Math.round((c.raised / c.goal) * 100)) : 0;
+    detailRoot.innerHTML = 
+      <h2></h2>
+      <div class="campaign-card">
+        <div class="campaign-media">
+          <img src="/alpha/public/images/campaign-placeholder.png" alt="" />
+          <span class="stage-label"></span>
+        </div>
+        <div class="campaign-info">
+          <p class="campaign-description"></p>
+          <div class="funding-info">
+            <span class="raised"> EGP raised</span>
+            <span class="backers"> Backers</span>
+            <span class="percentage">%</span>
+          </div>
+          <div class="progress-bar"><div class="progress" style="width:%"></div></div>
+        </div>
+      </div>;
+  }
+
+  function router(){
+    const hash = location.hash || '#/home';
+    const matchCampaign = hash.match(/^#\/campaign\/(\d+)$/);
+    hide(viewHome); hide(viewNew); hide(viewCampaign);
+    if(matchCampaign){ show(viewCampaign); renderCampaignDetail(matchCampaign[1]); return; }
+    if(hash === '#/new'){ show(viewNew); return; }
+    show(viewHome);
+  }
+
+  window.addEventListener('hashchange', router);
+  router();
+
+  // hook up new campaign form (UI-only)
+  const form = document.getElementById('new-campaign-form');
+  function loadLocal(){ try { return JSON.parse(localStorage.getItem('alphaLocalCampaigns')||'[]'); } catch(e){ return []; } }
+  function saveLocal(list){ try { localStorage.setItem('alphaLocalCampaigns', JSON.stringify(list)); } catch(e){} }
+  let localItems = loadLocal();
+  campaigns = campaigns.concat(localItems);
+  if(form){
+    form.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      const fd = new FormData(form);
+      const title = String(fd.get('title')||'Untitled').trim();
+      const description = String(fd.get('description')||'').trim();
+      const goal = Number(fd.get('goal')||0);
+      const id = Date.now();
+      const item = { id, title, description, goal, raised:0, backers:0, stage:'Concept', daysLeft:30, isFeatured:false };
+      localItems.push(item); saveLocal(localItems);
+      campaigns.push(item);
+      form.reset();
+      location.hash = '#/campaign/' + id;
+      renderCampaigns();
+      router();
+    });
+  }
+
+  // navigate to details when clicking a campaign card
+  const campaignsContainer = document.getElementById('campaigns-container');
+  if(campaignsContainer){
+    campaignsContainer.addEventListener('click', (e)=>{
+      const card = e.target.closest('.campaign-card');
+      if(card && card.dataset && card.dataset.id){
+        location.hash = '#/campaign/' + card.dataset.id;
+      }
+    });
+  }
+
