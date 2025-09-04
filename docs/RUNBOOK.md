@@ -26,3 +26,12 @@ Reset data
 
 Logs
 - Console logs for server; event logs (TBD) will be appended to stdout and rotated by host if needed.
+
+Media upload (images/videos)
+- Open Media Manager: `/alpha/admin/media` (sign in first).
+- For images: choose a file and click “Upload image”. Max 25 MB; types: PNG, JPG/JPEG, WEBP, GIF. The file is stored under `/alpha/public/uploads/` and the campaign’s `imageUrl` is updated.
+- For videos: paste a YouTube/Vimeo URL and click “Save video URL”. The campaign page auto‑embeds it.
+- Recommended assets
+  - Card/cover image: 1200×675 (16:9), JPG or WEBP, < 500 KB preferred.
+  - Logo/secondary image: 800×800 (1:1), PNG with transparent background if needed.
+  - Video: YouTube or Vimeo link; keep under 2–3 minutes for alpha.
