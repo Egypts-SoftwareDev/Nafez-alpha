@@ -101,13 +101,11 @@ input, button, select, textarea { font-family: inherit; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.28); border: 1px solid rgba(255,255,255,0.35); transition: .25s; border-radius: 999px; }
 .slider:before { content: "🌙"; display:flex; align-items:center; justify-content:center; font-size:12px; color:#cfe468; position: absolute; height: 16px; width: 16px; left: 2px; top: 50%; transform: translateY(-50%); background: #0a1522; border-radius: 50%; transition: .25s; box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
-.slider:after { content: '☀'; position:absolute; right: 5px; top:50%; transform: translateY(-50%); font-size: 12px; color: #0a1522; opacity: .9; }
 input:checked + .slider { background: #cfe468; border-color: #9fb63c; }
-input:checked + .slider:before { transform: translate(16px,-50%); background: #0a1522; content: '🌙'; }
+input:checked + .slider:before { transform: translate(16px,-50%); background: #ffffff; color:#0a1522; content: '☀'; }
 /* Light theme: invert knob color for contrast */
 :root.theme-light .slider { background: rgba(0,0,0,0.18); border-color: rgba(0,0,0,0.25); }
 :root.theme-light .slider:before { background: #ffffff; color:#0a1522; }
-:root.theme-light .slider:after { color: #0a1522; }
 
 .separator {
   margin: 0 0.25rem;
