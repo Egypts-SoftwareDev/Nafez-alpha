@@ -312,14 +312,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Ship dates → calendar events
     try {
-      const dates = visible.map((c) => computeShippingDate(c)).filter(Boolean).map((d) => {
+      const events = visible.map((c) => {
+        const d = computeShippingDate(c); if (!d) return null;
         const y = d.getFullYear(); const m = String(d.getMonth()+1).padStart(2,'0'); const da = String(d.getDate()).padStart(2,'0');
-        return `${y}-${m}-${da}`;
-      });
-      if (!window.__pendingCalDates) window.__pendingCalDates = new Set();
-      dates.forEach((k)=> window.__pendingCalDates.add(k));
+        const key = `${y}-${m}-${da}`; const days = Math.max(0, Math.ceil((d.getTime() - Date.now())/(24*60*60*1000)));
+        return { key, title: c.title, days };
+      }).filter(Boolean);
+      if (!window.__pendingCalEvents) window.__pendingCalEvents = [];
+      window.__pendingCalEvents.push(...events);
       if (window.nafezCal && typeof window.nafezCal.add === 'function') {
-        window.nafezCal.add(dates);
+        window.nafezCal.add(events);
       }
     } catch(_) {}
 
@@ -461,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const next = document.getElementById('calNext');
     if (!grid || !mEl || !yEl) return;
     let current = new Date();
-    const eventDays = { }; // e.g., '2025-09-10': true
+    const eventDays = { }; // e.g., '2025-09-10': [{title,days}]
     function render(){
       const y = current.getFullYear();
       const m = current.getMonth();
@@ -476,28 +478,50 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let d=1; d<=days; d++){
         const cell=document.createElement('div'); cell.className='cal-cell'; cell.textContent=String(d);
         const today=new Date(); if (d===today.getDate() && m===today.getMonth() && y===today.getFullYear()) cell.classList.add('cal-today');
-        const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; if (eventDays[key]) cell.classList.add('cal-event');
+        const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; if (eventDays[key] && eventDays[key].length) { cell.classList.add('cal-event'); cell.dataset.key = key; }
         grid.appendChild(cell);
       }
     }
     prev && prev.addEventListener('click', ()=>{ current.setMonth(current.getMonth()-1); render(); });
     next && next.addEventListener('click', ()=>{ current.setMonth(current.getMonth()+1); render(); });
     // Expose small API to add dates and re-render if in current month
+    window.__calEventDays = eventDays;
     window.nafezCal = {
-      add: function(dateKeys){
+      add: function(events){
         try {
-          (dateKeys||[]).forEach((k)=>{ eventDays[k]=true; });
+          (events||[]).forEach((e)=>{ if (!e || !e.key) return; if (!eventDays[e.key]) eventDays[e.key]=[]; eventDays[e.key].push({ title: e.title, days: e.days }); });
           render();
         } catch(_) {}
-      }
+      },
+      get: function(key){ return eventDays[key] || []; }
     };
     // Drain any pending dates collected during early card rendering
     try {
-      if (window.__pendingCalDates) {
-        window.nafezCal.add(Array.from(window.__pendingCalDates));
+      if (window.__pendingCalEvents && window.__pendingCalEvents.length) {
+        window.nafezCal.add(window.__pendingCalEvents);
       }
     } catch(_) {}
     render();
+  })();
+
+  // Calendar tooltip interactions
+  (function initCalTooltip(){
+    const grid = document.getElementById('calGrid');
+    if (!grid) return;
+    let tip = document.createElement('div'); tip.className='cal-tooltip'; tip.style.display='none'; document.body.appendChild(tip);
+    function showTip(e){
+      const cell = e.target.closest('.cal-cell'); if (!cell || !cell.dataset || !cell.dataset.key) { tip.style.display='none'; return; }
+      const key = cell.dataset.key; const list = (window.nafezCal && window.nafezCal.get) ? window.nafezCal.get(key) : [];
+      if (!list || !list.length) { tip.style.display='none'; return; }
+      let html = '<span class="title">Estimated Shipping</span><ul>' + list.map(it => `<li>${it.title} — in ${it.days} days</li>`).join('') + '</ul>';
+      tip.innerHTML = html; tip.style.display='block';
+      const rect = cell.getBoundingClientRect();
+      const left = rect.left + window.scrollX + rect.width + 8; const top = rect.top + window.scrollY - 4;
+      tip.style.left = left + 'px'; tip.style.top = top + 'px';
+    }
+    function hideTip(){ tip.style.display='none'; }
+    grid.addEventListener('mousemove', showTip);
+    grid.addEventListener('mouseleave', hideTip);
   })();
 
   // Sidebar: Seeker/Backer checklist
