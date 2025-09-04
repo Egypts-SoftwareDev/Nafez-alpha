@@ -123,6 +123,24 @@ document.addEventListener('DOMContentLoaded', () => {
     return value.toLocaleString('en-EG', { maximumFractionDigits: 0 });
   }
 
+  // Deterministic estimated shipping date based on campaign attributes
+  function computeShippingDate(c) {
+    try {
+      const base = new Date();
+      const id = Number(c.id || 1);
+      const daysLeft = Number(c.daysLeft || 30);
+      // Offset: daysLeft plus 30..90 days pseudo-randomized by id
+      const extra = 30 + ((id * 37) % 61); // 30..90
+      const offset = Math.max(30, daysLeft) + extra;
+      const ship = new Date(base.getTime() + offset * 24 * 60 * 60 * 1000);
+      return ship;
+    } catch (_) { return null; }
+  }
+  function formatMonthYear(d) {
+    if (!d || !(d instanceof Date)) return 'TBD';
+    return d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  }
+
   // Basic preference retrieval (placeholder until onboarding is built)
   // Stores a list of preferred categories in localStorage under 'nafez:prefs:categories'
   function getUserPreferredCategories() {
@@ -251,6 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
       .map((c) => {
         const pct = c.goal ? Math.min(100, Math.round((c.raised / c.goal) * 100)) : 0;
         const imgSrc = (c.imageUrl && typeof c.imageUrl === 'string') ? c.imageUrl : '/alpha/public/images/campaign-placeholder.png';
+        const shipDate = computeShippingDate(c);
+        const shipLabel = formatMonthYear(shipDate);
         return `
           <div class="campaign-card" data-campaign-id="${c.id}" role="button" tabindex="0" aria-label="Open ${c.title}">
             <div class="media-col">
@@ -280,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <p class="campaign-description">${c.description}</p>
               <div class="shipping-info">
                 <span class="shipping-label">Estimated Shipping</span>
-                <span class="shipping-date">TBD</span>
+                <span class="shipping-date">${shipLabel}</span>
               </div>
               <a class="rewards-btn large" href="/alpha/campaign/${c.id}" role="link" aria-label="View ${c.title} details">View Rewards</a>
             </div>
@@ -289,6 +309,19 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .join('');
     container.innerHTML = html;
+
+    // Ship dates → calendar events
+    try {
+      const dates = visible.map((c) => computeShippingDate(c)).filter(Boolean).map((d) => {
+        const y = d.getFullYear(); const m = String(d.getMonth()+1).padStart(2,'0'); const da = String(d.getDate()).padStart(2,'0');
+        return `${y}-${m}-${da}`;
+      });
+      if (!window.__pendingCalDates) window.__pendingCalDates = new Set();
+      dates.forEach((k)=> window.__pendingCalDates.add(k));
+      if (window.nafezCal && typeof window.nafezCal.add === 'function') {
+        window.nafezCal.add(dates);
+      }
+    } catch(_) {}
 
     // Make entire card clickable to details
     container.querySelectorAll('.campaign-card').forEach((card) => {
@@ -449,6 +482,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     prev && prev.addEventListener('click', ()=>{ current.setMonth(current.getMonth()-1); render(); });
     next && next.addEventListener('click', ()=>{ current.setMonth(current.getMonth()+1); render(); });
+    // Expose small API to add dates and re-render if in current month
+    window.nafezCal = {
+      add: function(dateKeys){
+        try {
+          (dateKeys||[]).forEach((k)=>{ eventDays[k]=true; });
+          render();
+        } catch(_) {}
+      }
+    };
+    // Drain any pending dates collected during early card rendering
+    try {
+      if (window.__pendingCalDates) {
+        window.nafezCal.add(Array.from(window.__pendingCalDates));
+      }
+    } catch(_) {}
     render();
   })();
 
