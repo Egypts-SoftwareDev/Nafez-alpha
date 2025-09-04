@@ -298,7 +298,9 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
 
 /* When in list view, orient the card horizontally like the original mockup. */
 #campaigns-container.list .campaign-card {
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 16px;
 }
 
 /* Campaign card styles */
@@ -326,6 +328,7 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
   width: 100%;
   height: auto;
   display: block;
+  border-radius: 12px;
 }
 
 .stage-label {
@@ -351,15 +354,8 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
 }
 
 /* In list view, restore the original horizontal proportions */
-#campaigns-container.list .campaign-media {
-  flex: 1 1 40%;
-  width: auto;
-}
-
-#campaigns-container.list .campaign-info {
-  flex: 1 1 60%;
-  width: auto;
-}
+#campaigns-container.list .media-col { display:flex; flex-direction: column; gap: 8px; }
+#campaigns-container.list .info-col { display:flex; flex-direction: column; gap: 8px; }
 
 .campaign-title {
   margin: 0 0 0.25rem;
@@ -398,14 +394,6 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
 .raised { color: var(--secondary); }
 .backers { color: var(--secondary); }
 .percentage { color: var(--primary); }
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background-color: var(--progress-bg);
-  border-radius: 4px;
-  overflow: hidden;
-}
 
 .progress {
   height: 100%;
@@ -449,6 +437,15 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
   background-color: var(--primary);
   color: var(--secondary);
 }
+
+/* New media-aligned stats/progress layout for list view */
+.media-stats { display:flex; gap:16px; color: var(--muted); font-size: 12px; font-weight:600; }
+.media-progress { display:grid; grid-template-columns: 1fr auto; align-items:center; gap:8px; }
+.progress-pill { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 999px; overflow: hidden; }
+.pct-badge { padding: 2px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); color: var(--text-dark); background: #fff; }
+.shipping-info { display:flex; gap:8px; align-items:center; color: var(--muted); }
+.shipping-info .shipping-label { color: #ad6b6b; font-weight: 600; }
+.rewards-btn.large { align-self: flex-start; border-radius: 999px; padding: .6rem 1.1rem; }
 
 /* Ad spaces */
 .ad-space {

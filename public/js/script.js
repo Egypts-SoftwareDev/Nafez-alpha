@@ -250,36 +250,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const html = visible
       .map((c) => {
         const pct = c.goal ? Math.min(100, Math.round((c.raised / c.goal) * 100)) : 0;
+        const imgSrc = (c.imageUrl && typeof c.imageUrl === 'string') ? c.imageUrl : '/alpha/public/images/campaign-placeholder.png';
         return `
           <div class="campaign-card" data-campaign-id="${c.id}" role="button" tabindex="0" aria-label="Open ${c.title}">
-            <div class="campaign-media">
-              <img src="/alpha/public/images/campaign-placeholder.png" alt="${c.title}" />
-              <span class="stage-label">${c.stage}</span>
+            <div class="media-col">
+              <div class="campaign-media">
+                <img src="${imgSrc}" alt="${c.title}" />
+                <span class="stage-badge">${c.stage || 'Stage'}</span>
+              </div>
+              <div class="media-stats">
+                <span class="raised">${formatEGP(c.raised)} EGP raised</span>
+                <span class="backers">${c.backers} Backers</span>
+              </div>
+              <div class="media-progress">
+                <div class="progress-pill"><div class="progress" style="width:${pct}%"></div></div>
+                <div class="pct-badge">${pct}%</div>
+              </div>
+              <div class="deadline-info">
+                <span>${c.daysLeft} days left</span>
+                <span>Round ends: TBD</span>
+              </div>
             </div>
-            <div class="campaign-info">
+            <div class="info-col">
               <h3 class="campaign-title">${c.title}</h3>
               <div class="creator">
                 <img src="/alpha/public/images/user-icon.png" alt="avatar" class="avatar" />
                 <span>${c.owner}</span>
               </div>
               <p class="campaign-description">${c.description}</p>
-              <div class="funding-info">
-                <span class="raised">${formatEGP(c.raised)} EGP raised</span>
-                <span class="backers">${c.backers} Backers</span>
-                <span class="percentage">${pct}%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress" style="width:${pct}%"></div>
-              </div>
-              <div class="deadline-info">
-                <span>${c.daysLeft} days left</span>
-                <span>Round ends: TBD</span>
-              </div>
               <div class="shipping-info">
                 <span class="shipping-label">Estimated Shipping</span>
-                <span>TBD</span>
+                <span class="shipping-date">TBD</span>
               </div>
-              <a class="rewards-btn" href="/alpha/campaign/${c.id}" role="link" aria-label="View ${c.title} details">View Details</a>
+              <a class="rewards-btn large" href="/alpha/campaign/${c.id}" role="link" aria-label="View ${c.title} details">View Rewards</a>
             </div>
           </div>
         `;
