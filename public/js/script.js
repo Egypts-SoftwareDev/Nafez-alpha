@@ -188,14 +188,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let cats = new Set(['All']);
     (campaigns || []).forEach(c => { if (c.category) cats.add(c.category); });
     const list = (cats.size > 1 ? Array.from(cats) : DEFAULT_CATEGORIES);
-    categoriesRow.innerHTML = list.map(cat => `<span class="category-chip${cat===selectedCategory?' active':''}" data-cat="${cat}">${cat}</span>`).join('');
+    categoriesRow.innerHTML = list.map(cat => `<button type="button" class="category-chip${cat===selectedCategory?' active':''}" data-cat="${cat}" aria-pressed="${cat===selectedCategory}">${cat}</button>`).join('');
     categoriesRow.querySelectorAll('.category-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
+      const activate = () => {
         selectedCategory = chip.getAttribute('data-cat');
         page = 1; // reset pagination when category changes
         renderCategories();
         renderCampaigns();
-      });
+      };
+      chip.addEventListener('click', activate);
+      chip.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
     });
     // Carousel controls (scroll the viewport)
     if (catPrev && catViewport) catPrev.onclick = () => { catViewport.scrollBy({ left: -Math.max(160, catViewport.clientWidth * 0.5), behavior: 'smooth' }); };

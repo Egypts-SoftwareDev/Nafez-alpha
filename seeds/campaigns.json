@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Pyrasound V1",
+    "owner": "Omar A.",
+    "description": "The Egyptian-made home theatre system. Support local production and pre-order this 100% Egyptian full surround-sound Dolby Atmos approved home theatre system.",
+    "goal": 50000,
+    "raised": 25048,
+    "backers": 49,
+    "stage": "Concept",
+    "daysLeft": 23,
+    "isFeatured": true,
+    "fundingModel": "flexible",
+    "category": "Hardware",
+    "rewards": [
+      { "id": 1, "title": "Supporter", "description": "Thank you shout-out", "amountEGP": 150 },
+      { "id": 2, "title": "Soundbar Pack", "description": "Pyrasound soundbar pre-order", "amountEGP": 1200 },
+      { "id": 3, "title": "Full Pyramid Set", "description": "Soundbar + 3 pyramid speakers", "amountEGP": 3000 }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Solar Water Purifier",
+    "owner": "Sara M.",
+    "description": "A portable solar-powered water purification device designed for remote villages. Help us provide clean water to those in need.",
+    "goal": 30000,
+    "raised": 12200,
+    "backers": 21,
+    "stage": "Prototype",
+    "daysLeft": 15,
+    "isFeatured": true,
+    "fundingModel": "flexible",
+    "category": "Environment",
+    "rewards": [
+      { "id": 1, "title": "Clean Water Supporter", "description": "Thank you card", "amountEGP": 150 },
+      { "id": 2, "title": "Family Kit", "description": "2 purifier bottles + 4 filters", "amountEGP": 400 },
+      { "id": 3, "title": "Village Pack", "description": "10 purifier bottles for a village", "amountEGP": 1000 }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "NileSmart Irrigation Sensors",
+    "owner": "GreenFields Labs",
+    "description": "Low-cost soil moisture and climate sensors with a mobile app to cut farm water usage by up to 30% across the Delta.",
+    "goal": 80000,
+    "raised": 35500,
+    "backers": 67,
+    "stage": "Prototype",
+    "daysLeft": 28,
+    "isFeatured": true,
+    "category": "Agriculture"
+  },
+  {
+    "id": 4,
+    "title": "KosharyBot — Smart Kitchen Assistant",
+    "owner": "Cairo Robotics",
+    "description": "An affordable kitchen robot that automates prep for Egypt's favorite dish. Precise portions, consistent taste, less waste.",
+    "goal": 120000,
+    "raised": 48210,
+    "backers": 91,
+    "stage": "Concept",
+    "daysLeft": 35,
+    "isFeatured": false,
+    "category": "Technology"
+  },
+  {
+    "id": 5,
+    "title": "Sinai Trekker Modular Backpack",
+    "owner": "Bedouin Gear Co.",
+    "description": "A durable, modular backpack designed with Sinai guides. Switchable pockets, desert-grade materials, lifetime repair policy.",
+    "goal": 45000,
+    "raised": 27400,
+    "backers": 132,
+    "stage": "Running",
+    "daysLeft": 12,
+    "isFeatured": true,
+    "fundingModel": "flexible",
+    "rewards": [
+      { "id": 1, "title": "Trail Patch", "description": "Limited edition woven patch", "amountEGP": 250 },
+      { "id": 2, "title": "Backpack Early", "description": "Early backer price for the backpack", "amountEGP": 800 },
+      { "id": 3, "title": "Backpack + Accessories", "description": "Backpack + accessory kit", "amountEGP": 1200 }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Harf+ Arabic Learning App",
+    "owner": "EdTech Nile",
+    "description": "A bilingual Arabic learning app for kids with Egyptian accent support, AR letters, and parent progress dashboards.",
+    "goal": 60000,
+    "raised": 15250,
+    "backers": 110,
+    "stage": "Prototype",
+    "daysLeft": 41,
+    "isFeatured": false,
+    "category": "Community"
+  }
+]
+

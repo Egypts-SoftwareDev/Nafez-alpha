@@ -484,15 +484,11 @@ footer { margin-top: 40px; border-top: 1px solid var(--border); }
 .sss-footer-logo { height: 18px; width: auto; opacity: .9; }
 
 /* Responsive adjustments */
- param($m) ($m.Value -replace "\.ad-space \{[\s\S]*?\}", ".sidebar-card { max-width: none; flex: 1; }") 
-  .content-right {
-    flex-direction: row;
-    width: 100%;
-  }
-  .ad-space {
-    height: 120px;
-  }
-}/* Generic util for SPA views */
+@media (max-width: 1024px) {
+  .content-right { flex-direction: row; width: 100%; }
+  .sidebar-card { max-width: none; flex: 1; }
+}
+/* Generic util for SPA views */
 [hidden] { display: none !important; }
 .form-wrapper { max-width: 640px; margin: 2rem auto; background: rgba(255,255,255,0.04); border: 1px solid #263244; border-radius: 12px; padding: 1.25rem; }
 .form-wrapper h2 { margin: 0 0 0.75rem 0; color: #cfe468; text-align: center; }
