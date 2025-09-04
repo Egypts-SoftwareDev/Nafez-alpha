@@ -118,6 +118,37 @@ function writePledges(list) {
   }
 }
 
+// Sanitize helper to fix mojibake sequences in seed data and user content
+function sanitizeStr(s) {
+  if (s === undefined || s === null) return s;
+  try {
+    let t = String(s);
+    // Common mojibake replacements (UTF-8 read as Windows-1252)
+    t = t
+      .replace(/â€“|â€”|–|—/g, '-')
+      .replace(/â€‘/g, '-')
+      .replace(/â€˜|â€™/g, "'")
+      .replace(/â€œ|â€�/g, '"')
+      .replace(/�/g, '-')
+      .replace(/\s+-\s+/g, ' - ');
+    return t;
+  } catch (_) { return s; }
+}
+
+function sanitizeCampaign(c) {
+  if (!c || typeof c !== 'object') return c;
+  const out = Object.assign({}, c);
+  ['title','owner','description','stage','category','videoUrl','imageUrl'].forEach((k)=>{ if (out[k]) out[k]=sanitizeStr(out[k]); });
+  if (out.story && typeof out.story === 'object') {
+    out.story = Object.assign({}, out.story);
+    ['title','description','pitch','risks','videoUrl'].forEach((k)=>{ if (out.story[k]) out.story[k]=sanitizeStr(out.story[k]); });
+  }
+  if (Array.isArray(out.rewards)) {
+    out.rewards = out.rewards.map((r)=>{ const q=Object.assign({}, r); q.title=sanitizeStr(q.title); q.description=sanitizeStr(q.description); return q; });
+  }
+  return out;
+}
+
 // Helper: update a pledge status in place and persist
 function setPledgeStatus(id, status) {
   try {
@@ -215,6 +246,7 @@ function renderHomePage(campaigns) {
 }
 
 function renderCampaignPage(c) {
+  c = sanitizeCampaign(c);
   if (!c) {
     return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Not Found</title></head><body><h1 style="color:#ff6b6b;">Campaign not found</h1></body></html>`;
   }
@@ -322,6 +354,7 @@ function renderCampaignPage(c) {
     </div>
     <script>
       (function(){
+        try { var back = document.querySelector('.wrap a[href="/alpha/home"]'); if (back) back.innerHTML='&larr; Back to campaigns'; } catch(_) {}
         var sel = document.getElementById('reward');
         var amt = document.getElementById('amount');
         var err = document.getElementById('pledge-error');
@@ -760,7 +793,7 @@ const server = http.createServer((req, res) => {
   }
   // Read-only API endpoints (authenticated)
   if (req.method === 'GET' && parsedUrl.pathname === '/alpha/api/campaigns') {
-    const campaigns = readCampaigns();
+    const campaigns = readCampaigns().map(sanitizeCampaign);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ campaigns }));
     return;
@@ -845,7 +878,7 @@ const server = http.createServer((req, res) => {
   if (req.method === 'GET' && apiMatch) {
     const id = parseInt(apiMatch[1], 10);
     const campaigns = readCampaigns();
-    const campaign = campaigns.find((c) => c.id === id);
+    const campaign = sanitizeCampaign(campaigns.find((c) => c.id === id));
     if (!campaign) {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Not found' }));

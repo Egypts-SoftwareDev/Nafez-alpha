@@ -165,7 +165,7 @@ input:checked + .slider:before { transform: translate(20px,-50%); background: #0
 /* Reduce arrow buttons ~30% */
 .rail-btn { background: transparent; color: var(--primary); border: 1px solid #9fb63c; border-radius: 8px; padding: 0 8px; cursor: pointer; height: 22px; line-height: 22px; }
 /* Shrink placeholder to 25% width */
-.featured-placeholder { flex: 0 1 25%; max-width: 25%; min-width: 160px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid #263244; border-radius: 10px; display:flex; align-items:center; justify-content:center; color: var(--muted); }
+.featured-placeholder { flex: 0 1 38%; max-width: 38%; min-width: 220px; height: 56px; background: rgba(255,255,255,0.05); border: 1px solid #263244; border-radius: 10px; display:flex; align-items:center; justify-content:center; color: var(--muted); }
 
 .top-feed-bar { display:flex; gap: 12px; background: #0f1e31; border: 1px solid #263244; border-radius: 16px; padding: 12px; align-items: center; width: 100%; box-sizing: border-box; }
 .controls-panel { display:flex; align-items:center; gap: 14px; flex: 0 1 300px; min-width: 240px; }
