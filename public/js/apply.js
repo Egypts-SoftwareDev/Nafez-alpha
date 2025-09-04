@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Normalize page title/heading to avoid stray characters in some terminals
+  try {
+    if (document && document.title) document.title = 'Apply - Start a Campaign';
+    const h2 = document.querySelector('h2');
+    if (h2) h2.textContent = 'Start a Campaign - Application';
+  } catch (_) {}
   // Only select the content sections for step toggling
   const sections = Array.from(document.querySelectorAll('section[data-step]'));
   // These are the visual step indicators (pills)
@@ -151,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!goal || goal < 1000) errs.push('Goal must be at least 1,000 EGP');
       if (!val('locationGov')) errs.push('Governorate is required');
       const d = num('durationDays');
-      if (d < 10 || d > 60) errs.push('Duration must be 10–60 days');
+      if (d < 10 || d > 60) errs.push('Duration must be 10-60 days');
     } else if (current === 1) {
       if (!val('name')) errs.push('Full name is required');
       const nid = val('nationalId');

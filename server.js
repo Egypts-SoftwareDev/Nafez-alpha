@@ -1033,15 +1033,37 @@ const server = http.createServer((req, res) => {
     const campaigns = readCampaigns();
     const rows = pledges.map((p) => {
       const camp = campaigns.find((c) => c.id === p.campaignId) || { title: 'Unknown' };
-      return `<tr><td>${p.id}</td><td>${camp.title}</td><td>EGP ${p.amountEGP}</td><td>${p.status}</td><td>${new Date(p.createdAt).toLocaleString()}</td></tr>`;
+      const cls = (p.status === 'succeeded') ? 'ok' : (p.status === 'authorized' ? 'info' : (p.status === 'failed' ? 'bad' : (p.status === 'canceled' ? 'muted' : 'info')));
+      return `<tr>
+        <td>${p.id}</td>
+        <td><a class="lnk" href="/alpha/campaign/${p.campaignId}">${camp.title}</a></td>
+        <td>EGP ${p.amountEGP}</td>
+        <td><span class="badge ${cls}">${p.status}</span></td>
+        <td>${new Date(p.createdAt).toLocaleString()}</td>
+      </tr>`;
     }).join('');
     const html = `<!DOCTYPE html><html><head><meta charset='UTF-8'><title>My Pledges</title>
     <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"> 
     <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin> 
     <link href=\"https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap\" rel=\"stylesheet\"> 
-    <style>body{font-family:'Tomorrow', Arial, sans-serif;background:#0a1522;color:#f5f5f5;margin:0} .wrap{max-width:960px;margin:0 auto;padding:1.5rem}
-    table{width:100%;border-collapse:collapse} th,td{border:1px solid #263244;padding:8px;text-align:left} a{color:#cfe468;text-decoration:none}
-    </style></head><body><div class='wrap'><a href='/alpha/home'>← Back to campaigns</a><h1 style='color:#cfe468'>My Pledges</h1>
+    <style>
+      body{font-family:'Tomorrow', Arial, sans-serif;background:#0a1522;color:#f5f5f5;margin:0}
+      .wrap{max-width:960px;margin:0 auto;padding:1.5rem}
+      h1{color:#cfe468;margin:.5rem 0 1rem 0}
+      a.lnk{color:#cfe468;text-decoration:none}
+      a.lnk:hover{text-decoration:underline}
+      table{width:100%;border-collapse:collapse;background:#112240;border:1px solid #263244;border-radius:8px;overflow:hidden}
+      th,td{border-bottom:1px solid #263244;padding:10px;text-align:left}
+      th{background:rgba(255,255,255,0.03);color:#8fa1b2;font-weight:600}
+      tr:last-child td{border-bottom:none}
+      .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid #263244}
+      .badge.ok{background:rgba(12,254,4,.12);color:#8fff7a;border-color:#1f6f22}
+      .badge.info{background:rgba(207,228,104,.12);color:#cfe468;border-color:#9fb63c}
+      .badge.bad{background:rgba(255,107,107,.12);color:#ff6b6b;border-color:#8a3a3a}
+      .badge.muted{background:rgba(255,255,255,.06);color:#8fa1b2;border-color:#263244}
+    </style></head>
+    <body><div class='wrap'><a href='/alpha/home' style='color:#cfe468;text-decoration:none'>&larr; Back to campaigns</a>
+    <h1>My Pledges</h1>
     <table><tr><th>ID</th><th>Campaign</th><th>Amount</th><th>Status</th><th>Date</th></tr>${rows || '<tr><td colspan=5>No pledges yet</td></tr>'}</table>
     </div></body></html>`;
     res.writeHead(200, { 'Content-Type': 'text/html' }); res.end(html); return;

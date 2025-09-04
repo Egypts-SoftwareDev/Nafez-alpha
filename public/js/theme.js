@@ -18,6 +18,13 @@
       }
     }
 
+    // Page title normalization for some shells/encodings
+    try {
+      if (location && typeof location.pathname === 'string') {
+        if (location.pathname.endsWith('/alpha/home')) document.title = 'Nafez Alpha - Home';
+      }
+    } catch(_){}
+
     // Initial theme
     let theme = localStorage.getItem(KEY);
     if (!theme) {
