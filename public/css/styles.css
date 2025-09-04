@@ -75,7 +75,7 @@ input, button, select, textarea { font-family: inherit; }
 .nav-link {
   color: var(--text-light);
   text-decoration: none;
-  margin: 0 0.5rem;
+  margin: 0 0.35rem;
   font-weight: 500;
   position: relative;
 }
@@ -86,10 +86,10 @@ input, button, select, textarea { font-family: inherit; }
 }
 
 /* Navbar right group layout and compact sub-links under "How it works" */
-.nav-right { display: flex; align-items: flex-start; gap: 8px; }
+.nav-right { display: flex; align-items: flex-start; gap: 4px; }
 .nav-item { position: relative; display: flex; flex-direction: column; align-items: center; }
 .nav-item .nav-sub { position: static; display: flex; gap: 8px; justify-content: center; margin-top: 2px; line-height: 1; }
-.nav-item .nav-sub a { color: var(--primary); font-size: 12px; text-decoration: none; opacity: 0.9; font-family: 'Orbitron', 'Tomorrow', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+.nav-item .nav-sub a { color: var(--primary); font-size: 14px; text-decoration: none; opacity: 0.9; font-family: 'Orbitron', 'Tomorrow', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 .nav-item .nav-sub a:hover { opacity: 1; text-decoration: underline; }
 /* Specific brand colors for sub-links */
 .nav-item .nav-sub a.seekers { color: var(--seekers-accent); }
@@ -97,20 +97,24 @@ input, button, select, textarea { font-family: inherit; }
 
 /* Toggle placed under Sign in */
 .nav-toggle { margin-top: 4px; }
-.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch { position: relative; display: inline-block; width: 36px; height: 20px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.28); border: 1px solid rgba(255,255,255,0.35); transition: .25s; border-radius: 999px; }
-.slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 50%; transform: translateY(-50%); background: #0a1522; border-radius: 50%; transition: .25s; box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+.slider:before { content: "🌙"; display:flex; align-items:center; justify-content:center; font-size:12px; color:#cfe468; position: absolute; height: 16px; width: 16px; left: 2px; top: 50%; transform: translateY(-50%); background: #0a1522; border-radius: 50%; transition: .25s; box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+.slider:after { content: '☀'; position:absolute; right: 5px; top:50%; transform: translateY(-50%); font-size: 12px; color: #0a1522; opacity: .9; }
 input:checked + .slider { background: #cfe468; border-color: #9fb63c; }
-input:checked + .slider:before { transform: translate(20px,-50%); background: #0a1522; }
+input:checked + .slider:before { transform: translate(16px,-50%); background: #0a1522; content: '🌙'; }
 /* Light theme: invert knob color for contrast */
 :root.theme-light .slider { background: rgba(0,0,0,0.18); border-color: rgba(0,0,0,0.25); }
-:root.theme-light .slider:before { background: #ffffff; }
+:root.theme-light .slider:before { background: #ffffff; color:#0a1522; }
+:root.theme-light .slider:after { color: #0a1522; }
 
 .separator {
-  margin: 0 0.5rem;
+  margin: 0 0.25rem;
   color: var(--muted);
 }
+
+.theme-label { margin-left: 6px; font-size: 12px; color: var(--muted); user-select: none; }
 
 .nav-center { /* hard center regardless of left/right widths */
   position: absolute;
