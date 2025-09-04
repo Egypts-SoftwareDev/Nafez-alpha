@@ -116,6 +116,19 @@ function writePledges(list) {
   }
 }
 
+// Helper: update a pledge status in place and persist
+function setPledgeStatus(id, status) {
+  try {
+    let pledges = readPledges();
+    const idx = pledges.findIndex((p) => Number(p.id) === Number(id));
+    if (idx === -1) return null;
+    const next = Object.assign({}, pledges[idx], { status: String(status || '').toLowerCase() });
+    pledges[idx] = next;
+    writePledges(pledges);
+    return next;
+  } catch (e) { return null; }
+}
+
 // Parse cookies from request headers
 function parseCookies(req) {
   const header = req.headers.cookie;
@@ -747,6 +760,28 @@ const server = http.createServer((req, res) => {
     const campaigns = readCampaigns();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ campaigns }));
+    return;
+  }
+  // Simple simulator endpoints to toggle pledge status during alpha testing
+  const simMatch = parsedUrl.pathname.match(/^\/alpha\/api\/sim\/payments\/(\d+)(?:\/(succeed|fail|cancel))?$/);
+  if ((req.method === 'POST' || req.method === 'GET') && simMatch) {
+    if (!isAuthenticated) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const pid = parseInt(simMatch[1], 10);
+    let status = simMatch[2] || null;
+    if (req.method === 'POST' && !status) {
+      // Expect a JSON body: { status: 'succeeded'|'failed'|'canceled' }
+      return parseJsonBody(req, (err, body) => {
+        if (err || !body || !body.status) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Missing status' })); return; }
+        const updated = setPledgeStatus(pid, body.status);
+        if (!updated) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not found' })); return; }
+        res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ pledge: updated }));
+      });
+    }
+    // GET with shortcut action
+    status = status || 'succeeded';
+    const updated = setPledgeStatus(pid, status === 'fail' ? 'failed' : status);
+    if (!updated) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Not found' })); return; }
+    res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ pledge: updated }));
     return;
   }
   const apiMatch = parsedUrl.pathname.match(/^\/alpha\/api\/campaigns\/(\d+)$/);
