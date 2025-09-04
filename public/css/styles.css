@@ -315,6 +315,7 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 12px; /* keep content away from card edges */
 }
 
 .campaign-media {
@@ -333,8 +334,8 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
 
 .stage-label {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 6px;
+  left: 6px;
   background-color: var(--secondary);
   color: var(--primary);
   padding: 0.25rem 0.5rem;
@@ -354,8 +355,8 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
 }
 
 /* In list view, restore the original horizontal proportions */
-#campaigns-container.list .media-col { display:flex; flex-direction: column; gap: 8px; }
-#campaigns-container.list .info-col { display:flex; flex-direction: column; gap: 8px; }
+#campaigns-container.list .media-col { display:flex; flex-direction: column; gap: 8px; padding: 4px 12px; }
+#campaigns-container.list .info-col { display:flex; flex-direction: column; gap: 8px; padding: 4px 12px; }
 
 .campaign-title {
   margin: 0 0 0.25rem;
@@ -440,7 +441,7 @@ input:checked + .slider:before { transform: translate(16px,-50%); background: #f
 
 /* New media-aligned stats/progress layout for list view */
 .media-stats { display:flex; gap:16px; color: var(--muted); font-size: 12px; font-weight:600; }
-.media-progress { display:grid; grid-template-columns: 1fr auto; align-items:center; gap:8px; }
+.media-progress { display:grid; grid-template-columns: 1fr auto; align-items:center; gap:8px; padding: 0 6px; }
 .progress-pill { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 999px; overflow: hidden; }
 .pct-badge { padding: 2px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); color: var(--text-dark); background: #fff; }
 .shipping-info { display:flex; gap:8px; align-items:center; color: var(--muted); }
