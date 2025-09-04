@@ -12,7 +12,10 @@ Important env vars (alpha)
 
 Payments (alpha)
 - FakeGateway only (simulated). Pledges are recorded in `pledges.json` with status `authorized`.
-- Webhook simulator (TBD): will allow toggling pledge status for demos.
+- Simulator endpoints:
+  - `GET /alpha/api/sim/payments/:id/succeed` (or `.../fail`, `.../cancel`)
+  - `POST /alpha/api/sim/payments/:id/status` with `{ "status": "succeeded|failed|canceled" }`
+  - Auth required (be signed in).
 
 Data files
 - `campaigns.json`, `applications.json`, `pledges.json`
@@ -23,4 +26,3 @@ Reset data
 
 Logs
 - Console logs for server; event logs (TBD) will be appended to stdout and rotated by host if needed.
-
