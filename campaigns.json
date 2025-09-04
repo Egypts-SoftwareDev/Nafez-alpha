@@ -2,19 +2,316 @@
   {
     "id": 1,
     "title": "Pyrasound V1",
+    "owner": "Omar A.",
     "description": "The Egyptian-made home theatre system. Support local production and pre-order this 100% Egyptian full surround-sound Dolby Atmos approved home theatre system.",
     "goal": 50000,
-    "raised": 22648,
-    "backers": 47,
-    "stage": "Concept"
+    "raised": 25048,
+    "backers": 49,
+    "stage": "Concept",
+    "daysLeft": 23,
+    "isFeatured": true,
+    "fundingModel": "flexible",
+    "category": "Hardware",
+    "rewards": [
+      {
+        "id": 1,
+        "title": "Supporter",
+        "description": "Thank you shoutâ€‘out",
+        "amountEGP": 150
+      },
+      {
+        "id": 2,
+        "title": "Soundbar Pack",
+        "description": "Pyrasound soundbar preâ€‘order",
+        "amountEGP": 1200
+      },
+      {
+        "id": 3,
+        "title": "Full Pyramid Set",
+        "description": "Soundbar + 3 pyramid speakers",
+        "amountEGP": 3000
+      }
+    ]
   },
   {
     "id": 2,
     "title": "Solar Water Purifier",
+    "owner": "Sara M.",
     "description": "A portable solar-powered water purification device designed for remote villages. Help us provide clean water to those in need.",
     "goal": 30000,
-    "raised": 12000,
-    "backers": 20,
-    "stage": "Prototype"
+    "raised": 12200,
+    "backers": 21,
+    "stage": "Prototype",
+    "daysLeft": 15,
+    "isFeatured": true,
+    "fundingModel": "flexible",
+    "category": "Environment",
+    "rewards": [
+      {
+        "id": 1,
+        "title": "Clean Water Supporter",
+        "description": "Thank you card",
+        "amountEGP": 150
+      },
+      {
+        "id": 2,
+        "title": "Family Kit",
+        "description": "2 purifier bottles + 4 filters",
+        "amountEGP": 400
+      },
+      {
+        "id": 3,
+        "title": "Village Pack",
+        "description": "10 purifier bottles for a village",
+        "amountEGP": 1000
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "NileSmart Irrigation Sensors",
+    "owner": "GreenFields Labs",
+    "description": "Low-cost soil moisture and climate sensors with a mobile app to cut farm water usage by up to 30% across the Delta.",
+    "goal": 80000,
+    "raised": 35500,
+    "backers": 67,
+    "stage": "Prototype",
+    "daysLeft": 28,
+    "isFeatured": true,
+    "category": "Agriculture"
+  },
+  {
+    "id": 4,
+    "title": "KosharyBot â€“ Smart Kitchen Assistant",
+    "owner": "Cairo Robotics",
+    "description": "An affordable kitchen robot that automates prep for Egypt's favorite dish. Precise portions, consistent taste, less waste.",
+    "goal": 120000,
+    "raised": 48210,
+    "backers": 91,
+    "stage": "Concept",
+    "daysLeft": 35,
+    "isFeatured": false,
+    "category": "Technology"
+  },
+  {
+    "id": 5,
+    "title": "Sinai Trekker Modular Backpack",
+    "owner": "Bedouin Gear Co.",
+    "description": "A durable, modular backpack designed with Sinai guides. Switchable pockets, desert-grade materials, lifetime repair policy.",
+    "goal": 45000,
+    "raised": 27400,
+    "backers": 132,
+    "stage": "Running",
+    "daysLeft": 12,
+    "isFeatured": true,
+    "fundingModel": "flexible",
+    "rewards": [
+      {
+        "id": 1,
+        "title": "Trail Patch",
+        "description": "Limited edition woven patch",
+        "amountEGP": 250
+      },
+      {
+        "id": 2,
+        "title": "Backpack Early",
+        "description": "Early backer price for the backpack",
+        "amountEGP": 800
+      },
+      {
+        "id": 3,
+        "title": "Backpack + Accessories",
+        "description": "Backpack + accessory kit",
+        "amountEGP": 1200
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Harf+ â€“ Arabic Learning App",
+    "owner": "EdTech Nile",
+    "description": "A bilingual Arabic learning app for kids with Egyptian accent support, AR letters, and parent progress dashboards.",
+    "goal": 60000,
+    "raised": 15250,
+    "backers": 110,
+    "stage": "Prototype",
+    "daysLeft": 41,
+    "isFeatured": false,
+    "category": "Community"
+  },
+  {
+    "id": 7,
+    "title": "Eco Brick Maker",
+    "owner": "Delta Recycle",
+    "description": "Neighborhood-scale press that turns plastic waste into interlocking eco-bricks for sheds and benches.",
+    "goal": 38000,
+    "raised": 9800,
+    "backers": 57,
+    "stage": "Idea",
+    "daysLeft": 29,
+    "isFeatured": true,
+    "category": "Mobility"
+  },
+  {
+    "id": 8,
+    "title": "Alex Artisan Chocolate",
+    "owner": "Nour & Co.",
+    "description": "Bean-to-bar chocolate made in Alexandria using Upper Egypt cocoa partnerships. New flavors inspired by seaside life.",
+    "goal": 26000,
+    "raised": 17450,
+    "backers": 143,
+    "stage": "Running",
+    "daysLeft": 18,
+    "isFeatured": false,
+    "fundingModel": "flexible",
+    "category": "Food",
+    "rewards": [
+      {
+        "id": 1,
+        "title": "Taste Box",
+        "description": "4â€‘bar sampler box",
+        "amountEGP": 150
+      },
+      {
+        "id": 2,
+        "title": "Deluxe Box",
+        "description": "10â€‘bar deluxe selection",
+        "amountEGP": 400
+      },
+      {
+        "id": 3,
+        "title": "Founderâ€™s Edition",
+        "description": "Limited edition flavors",
+        "amountEGP": 900
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Cairo Bike Share Expansion",
+    "owner": "RideCairo",
+    "description": "Add 20 stations near universities and metro lines. Smart locks, EGP wallet support, and safer bike lanes advocacy.",
+    "goal": 150000,
+    "raised": 69200,
+    "backers": 321,
+    "stage": "Running",
+    "daysLeft": 22,
+    "isFeatured": true,
+    "category": "Agriculture"
+  },
+  {
+    "id": 10,
+    "title": "Saqqara Openâ€‘Source 3D Printer Kit",
+    "owner": "Makers of Egypt",
+    "description": "Locally manufactured 3D printer kit with communityâ€‘made upgrades, spare parts available across Egypt, and Arabic guides.",
+    "goal": 70000,
+    "raised": 30500,
+    "backers": 205,
+    "stage": "Prototype",
+    "daysLeft": 40,
+    "isFeatured": false,
+    "fundingModel": "flexible",
+    "rewards": [
+      {
+        "id": 1,
+        "title": "Parts Pack",
+        "description": "Spare parts + nozzles",
+        "amountEGP": 500
+      },
+      {
+        "id": 2,
+        "title": "Early Kit",
+        "description": "Early backer printer kit",
+        "amountEGP": 1500
+      },
+      {
+        "id": 3,
+        "title": "Pro Kit",
+        "description": "Dualâ€‘extruder kit + enclosure",
+        "amountEGP": 3500
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "title": "Oasis Microgreens Vertical Farm",
+    "owner": "Green Bites",
+    "description": "A containerized microgreens farm supplying fresh herbs to local restaurants with 90% less water usage.",
+    "goal": 52000,
+    "raised": 18900,
+    "backers": 88,
+    "stage": "Running",
+    "daysLeft": 25,
+    "isFeatured": true,
+    "category": "Health"
+  },
+  {
+    "id": 12,
+    "title": "DesertCool Solar Tiles",
+    "owner": "Sahara Tech",
+    "description": "Solar roof tiles that generate power and reduce indoor temperatures for rural clinics and schools.",
+    "goal": 200000,
+    "raised": 84500,
+    "backers": 264,
+    "stage": "Concept",
+    "daysLeft": 33,
+    "isFeatured": false
+  },
+  {
+    "id": 13,
+    "title": "Delta Agro Drone Mapping",
+    "owner": "SkyFarm Egypt",
+    "description": "Affordable drone imaging and NDVI crop mapping service to help small farms detect irrigation leaks and pests early.",
+    "goal": 95000,
+    "raised": 31200,
+    "backers": 74,
+    "stage": "Prototype",
+    "daysLeft": 26,
+    "isFeatured": true,
+    "fundingModel": "flexible",
+    "rewards": [
+      {
+        "id": 1,
+        "title": "Mapping Voucher",
+        "description": "Oneâ€‘field NDVI map",
+        "amountEGP": 300
+      },
+      {
+        "id": 2,
+        "title": "Monthly Plan",
+        "description": "4 fields per month",
+        "amountEGP": 900
+      },
+      {
+        "id": 3,
+        "title": "Season Partner",
+        "description": "Seasonâ€‘long mapping & reports",
+        "amountEGP": 5000
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Nubian Handcrafts Collective",
+    "owner": "Nile Heritage",
+    "description": "Empowering Nubian artisans with an online store, fair pricing, and sustainable packaging. First collection ships nationwide.",
+    "goal": 42000,
+    "raised": 18850,
+    "backers": 159,
+    "stage": "Running",
+    "daysLeft": 17,
+    "isFeatured": false
+  },
+  {
+    "id": 15,
+    "title": "QueueLess â€“ Smart Clinic Booking",
+    "owner": "HealthHub Cairo",
+    "description": "A lightweight web + kiosk system that schedules patient visits by time slots and notifies via WhatsApp to reduce waiting rooms.",
+    "goal": 68000,
+    "raised": 22740,
+    "backers": 121,
+    "stage": "Concept",
+    "daysLeft": 21,
+    "isFeatured": true
   }
 ]

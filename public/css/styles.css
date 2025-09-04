@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Styles for the Nafez alpha prototype home page.
  *
  * This stylesheet defines a dark-themed layout inspired by the provided
@@ -6,6 +6,9 @@
  * right column reserved for advertisements. Color variables are used to
  * make it easy to tweak the palette globally.
  */
+
+/* Load Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&family=Orbitron:wght@400;600;700&display=swap');
 
 /* Color palette variables */
 :root {
@@ -18,6 +21,19 @@
   --border: #e6e6e6; /* light grey border for cards */
   --progress-bg: #e6f0c4; /* light green progress bar background */
   --progress-fill: #cfe468; /* progress bar fill */
+  /* Brand accents (override with exact hex later) */
+  --seekers-accent: #FFEE05; /* Seekers brand yellow */
+  --backers-accent: #0CFE04; /* Backers brand green */
+}
+
+/* Light theme overrides */
+:root.theme-light {
+  --secondary: #f6f8fb; /* page background */
+  --text-light: #0a1522; /* primary text on light */
+  --muted: #576c7f; /* muted text */
+  --border: #d6dee8; /* subtle borders on light */
+  --card-bg: #ffffff;
+  --progress-bg: #dfe9be;
 }
 
 /* Base styles */
@@ -27,11 +43,21 @@
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Tomorrow', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--secondary);
   color: var(--text-light);
   line-height: 1.5;
 }
+
+/* Ensure form controls inherit the global font */
+input, button, select, textarea { font-family: inherit; }
+
+/* Light theme surface tweaks for right-rail cards */
+:root.theme-light .sidebar-card { background: #ffffff; border-color: var(--border); color: #0a1522; }
+:root.theme-light .calendar .cal-head { color: #33485b; }
+:root.theme-light .cal-cell { border-color: #c8d3df; color: #0a1522; }
+:root.theme-light .cal-today { box-shadow: inset 0 0 0 1px #9fb63c; }
+:root.theme-light .nav-link { color: #0a1522; }
 
 /* Navigation bar */
 .navbar {
@@ -41,6 +67,9 @@ body {
   padding: 0.5rem 1rem;
   background-color: var(--secondary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative; /* anchor for absolute centered logo */
+  /* Reserve space for logo bulge; reduced by 18px total */
+  padding-bottom: 45px;
 }
 
 .nav-link {
@@ -56,21 +85,67 @@ body {
   color: var(--primary);
 }
 
+/* Navbar right group layout and compact sub-links under "How it works" */
+.nav-right { display: flex; align-items: flex-start; gap: 8px; }
+.nav-item { position: relative; display: flex; flex-direction: column; align-items: center; }
+.nav-item .nav-sub { position: static; display: flex; gap: 8px; justify-content: center; margin-top: 2px; line-height: 1; }
+.nav-item .nav-sub a { color: var(--primary); font-size: 12px; text-decoration: none; opacity: 0.9; font-family: 'Orbitron', 'Tomorrow', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+.nav-item .nav-sub a:hover { opacity: 1; text-decoration: underline; }
+/* Specific brand colors for sub-links */
+.nav-item .nav-sub a.seekers { color: var(--seekers-accent); }
+.nav-item .nav-sub a.backers { color: var(--backers-accent); }
+
+/* Toggle placed under Sign in */
+.nav-toggle { margin-top: 4px; }
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.28); border: 1px solid rgba(255,255,255,0.35); transition: .25s; border-radius: 999px; }
+.slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 50%; transform: translateY(-50%); background: #0a1522; border-radius: 50%; transition: .25s; box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+input:checked + .slider { background: #cfe468; border-color: #9fb63c; }
+input:checked + .slider:before { transform: translate(20px,-50%); background: #0a1522; }
+/* Light theme: invert knob color for contrast */
+:root.theme-light .slider { background: rgba(0,0,0,0.18); border-color: rgba(0,0,0,0.25); }
+:root.theme-light .slider:before { background: #ffffff; }
+
 .separator {
   margin: 0 0.5rem;
   color: var(--muted);
 }
 
-.nav-center {
-  flex: 1;
+.nav-center { /* hard center regardless of left/right widths */
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  pointer-events: none; /* allow clicks to pass except on bulge */
 }
 
-.nafez-logo {
-  width: clamp(120px, 15vw, 240px);
-  height: auto;
+.nafez-logo { width: clamp(180px, 20vw, 340px); height: auto; }
+
+/* Keep navbar dark in light mode */
+:root.theme-light .navbar { background-color: #0a1522; border-bottom: 1px solid rgba(255,255,255,0.1); }
+:root.theme-light .navbar .nav-link { color: #f5f5f5; }
+:root.theme-light .navbar .separator { color: rgba(255,255,255,0.7); }
+
+/* Logo bulge under navbar center */
+.nav-logo-bulge {
+  background: #0a1522;
+  padding: 16px 44px;
+  border-radius: 48px;
+  /* Keep bulge fully within navbar by removing downward translate */
+  transform: none;
+  box-shadow: 0 18px 36px rgba(0,0,0,0.35);
+  display: inline-flex; align-items: center; justify-content: center;
+  position: relative; z-index: 3;
+  pointer-events: auto; /* clickable logo */
 }
+:root.theme-light .nav-logo-bulge { background: #0a1522; }
+
+/* The navbar padding-bottom already reserves space for the bulge,
+   so no additional push is needed here. */
 
 /* Main container layout */
 .main-container {
@@ -83,19 +158,29 @@ body {
   gap: 1rem;
 }
 
-.content-left {
-  flex: 3;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
+.content-left { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
 
-.content-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+/* ----- Top feed area (Rectangles 4, 3, 1, 2) ----- */
+.feature-rail { display:flex; align-items:center; gap:10px; width: 100%; }
+/* Reduce arrow buttons ~30% */
+.rail-btn { background: transparent; color: var(--primary); border: 1px solid #9fb63c; border-radius: 8px; padding: 0 8px; cursor: pointer; height: 22px; line-height: 22px; }
+/* Shrink placeholder to 25% width */
+.featured-placeholder { flex: 0 1 25%; max-width: 25%; min-width: 160px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid #263244; border-radius: 10px; display:flex; align-items:center; justify-content:center; color: var(--muted); }
+
+.top-feed-bar { display:flex; gap: 12px; background: #0f1e31; border: 1px solid #263244; border-radius: 16px; padding: 12px; align-items: center; width: 100%; box-sizing: border-box; }
+.controls-panel { display:flex; align-items:center; gap: 14px; flex: 0 1 300px; min-width: 240px; }
+.controls-panel .filter-labels { display:flex; gap: 12px; }
+.controls-panel .view-toggle { display:flex; gap: 6px; }
+
+.categories-panel { display:flex; align-items:center; gap: 8px; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+/* Reduce category arrow buttons ~30% */
+.cat-btn { background: transparent; color: var(--primary); border: 1px solid #9fb63c; border-radius: 8px; padding: 0 6px; cursor: pointer; height: 20px; line-height: 20px; }
+/* Limit viewport so not all categories fit at once */
+.categories-carousel { flex: 1 1 auto; overflow:hidden; max-width: 100%; min-width: 0; }
+.categories-carousel .categories-row { display:flex; gap: 8px; flex-wrap: nowrap; margin: 0; padding: 2px; }
+
+
+.content-right { flex: 0 0 360px; display: flex; flex-direction: column; gap: 1rem; align-self: flex-start; }
 
 /* View/filter/search bar */
 .view-filter-bar {
@@ -176,18 +261,10 @@ body {
 }
 
 /* Category placeholder cards */
-.categories-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.category-card {
-  flex: 1;
-  height: 60px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
+.categories-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px 0; }
+.category-card { display: none; }
+.category-chip { padding: 6px 10px; border-radius: 999px; border: 1px solid #263244; background: rgba(255,255,255,0.04); color: var(--muted); font-size: 13px; cursor: pointer; }
+.category-chip.active, .category-chip:hover { border-color: #9fb63c; color: var(--primary); background: rgba(207, 228, 104, 0.10); }
 
 /*
  * Campaigns container
@@ -353,7 +430,8 @@ body {
 }
 
 .rewards-btn {
-  align-self: flex-start;
+  align-self: flex-end;
+  margin-left: auto;
   margin-top: 0.75rem;
   padding: 0.5rem 1rem;
   background-color: var(--secondary);
@@ -389,97 +467,24 @@ body {
    throughout to harmonize with the alpha theme.
 --------------------------------------------------------------------- */
 
-footer {
-  width: 100%;
-  margin-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 2rem;
-  background-color: var(--secondary);
-}
-
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  padding-bottom: 1.5rem;
-}
-
-.footer-links .column {
-  min-width: 140px;
-}
-
-.footer-links h4 {
-  margin-bottom: 0.5rem;
-  color: var(--primary);
-}
-
-.footer-links ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-links ul li {
-  margin-bottom: 0.25rem;
-}
-
-.footer-links ul li a {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 0.85rem;
-}
-
-.footer-links ul li a:hover {
-  color: var(--primary);
-  text-decoration: underline;
-}
-
-.bottom-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-  background-color: var(--primary);
-  color: var(--secondary);
-}
-
-.bottom-bar a {
-  color: var(--secondary);
-  margin: 0 0.5rem;
-  text-decoration: none;
-  font-size: 0.8rem;
-}
-
-.bottom-bar a:hover {
-  text-decoration: underline;
-}
-
-.bottom-bar .bottom-left,
-.bottom-bar .bottom-middle,
-.bottom-bar .bottom-right {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.bottom-bar .bottom-left img.bottom-logo {
-  max-width: 60px;
-  height: auto;
-}
-
-.bottom-bar .sss-footer-logo {
-  max-width: 80px;
-  height: auto;
-  margin-left: 0.25rem;
-}
+footer { margin-top: 40px; border-top: 1px solid var(--border); }
+.footer-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding: 20px; }
+.footer-links h4 { margin: 0 0 8px 0; font-size: 14px; color: var(--text-light); }
+.footer-links ul { list-style: none; padding: 0; margin: 0; }
+.footer-links li { margin: 6px 0; }
+.footer-links a { color: var(--muted); text-decoration: none; font-size: 14px; }
+.footer-links a:hover { color: var(--text-light); }
+.bottom-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px 22px 20px; border-top: 1px solid var(--border); }
+.bottom-left { display: flex; align-items: center; gap: 10px; }
+.bottom-logo { height: 22px; width: auto; }
+.bottom-middle { display: flex; gap: 12px; }
+.bottom-middle a { color: var(--muted); text-decoration: none; font-size: 14px; }
+.bottom-middle a:hover { color: var(--text-light); }
+.bottom-right { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.sss-footer-logo { height: 18px; width: auto; opacity: .9; }
 
 /* Responsive adjustments */
-@media (max-width: 900px) {
-  .main-container {
-    flex-direction: column;
-  }
+ param($m) ($m.Value -replace "\.ad-space \{[\s\S]*?\}", ".sidebar-card { max-width: none; flex: 1; }") 
   .content-right {
     flex-direction: row;
     width: 100%;
@@ -497,3 +502,70 @@ footer {
 .secondary-link { display: inline-block; margin-left: 12px; color: #cfe468; text-decoration: none; }
 .detail-view { max-width: 900px; margin: 1rem auto; background: rgba(255,255,255,0.04); border: 1px solid #263244; border-radius: 12px; padding: 1rem; }
 .detail-actions { text-align: center; margin: 0.5rem 0 1.5rem 0; }
+
+/* --- Sidebar + Calendar + Checklist (appended overrides) --- */
+/* Categories */
+.categories-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px 0; }
+.category-card { display: none; }
+.category-chip { padding: 6px 10px; border-radius: 999px; border: 1px solid #263244; background: rgba(255,255,255,0.04); color: var(--muted); font-size: 13px; cursor: pointer; }
+.category-chip.active, .category-chip:hover { border-color: #9fb63c; color: var(--primary); background: rgba(207, 228, 104, 0.10); }
+
+/* Sidebar cards */
+.sidebar-card { flex: 0 0 auto; max-width: 280px; background: #112240; border: 1px solid #263244; border-radius: 12px; padding: 12px; }
+.sidebar-card + .sidebar-card { margin-top: 12px; }
+.ad-card { height: 80px; width: 360px; max-width: 360px; display: flex; align-items: center; justify-content: center; color: var(--muted); border-style: dashed; position: static; z-index: 1; }
+.calendar-card { margin-top: 0; }
+.sticky-stack { position: sticky; top: 16px; width: 360px; max-width: 360px; z-index: 1; }
+.content-right #rightStickySpacer { height: 0; }
+/* Ensure inner cards fill the sticky width (override base 280px) */
+.content-right .sticky-stack .sidebar-card { width: 360px; max-width: 360px; }
+.sidebar-title { margin: 0 0 8px 0; color: var(--primary); font-size: 1rem; }
+
+/* Intizam calendar */
+.calendar { user-select: none; }
+.calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.calendar-brand { display: flex; justify-content: center; align-items: center; margin: 0 0 8px 0; }
+.calendar-brand img { height: 64px; width: auto; opacity: .95; }
+.calendar { max-height: 340px; overflow: hidden; }
+.cal-title { color: var(--text-light); font-weight: 700; letter-spacing: .5px; }
+.cal-btn { background: transparent; color: var(--primary); border: 1px solid #9fb63c; border-radius: 8px; padding: 2px 8px; cursor: pointer; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-cell { text-align: center; padding: 4px 0; border: 1px solid #263244; border-radius: 8px; color: var(--text-light); font-size: 12px; }
+.cal-head { color: var(--muted); font-weight: 600; background: rgba(255,255,255,0.03); }
+.cal-today { border-color: #9fb63c; box-shadow: inset 0 0 0 1px #9fb63c; }
+.cal-event { background: rgba(207, 228, 104, 0.10); color: var(--primary); }
+
+/* Checklist */
+.toggle-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.toggle-btn { flex: 1; background: transparent; color: var(--primary); border: 1px solid #9fb63c; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+.toggle-btn.active { background: var(--primary); color: #0a1522; }
+.checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; max-height: 260px; overflow: auto; }
+.checklist li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-light); }
+.checklist input[type="checkbox"] { accent-color: #cfe468; }
+
+/* Responsive overrides */
+@media (max-width: 900px) {
+  .main-container { flex-direction: column; }
+  .content-right { position: static; flex-direction: row; width: 100%; }
+  .sidebar-card { max-width: none; flex: 1; }
+  .ad-card { position: static; width: auto; }
+  .sticky-stack { position: static; width: auto; max-width: none; }
+}
+:root.theme-light .navbar .nav-search input { background:#ffffff; border-color: var(--border); color:#0a1522; }
+.nav-left { 
+  display:flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  gap:8px;
+  height:100%;
+}
+.nav-left-top { display:flex; gap:12px; align-items:center; }
+.nav-search { display:flex; align-items:center; margin-top: 21px; }
+.nav-search input { 
+  width: clamp(220px, 26vw, 420px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-light);
+}

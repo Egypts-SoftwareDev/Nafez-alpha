@@ -1,7 +1,17 @@
-﻿node_modules/
+node_modules/
 dist/
 build/
 *.log
+*.err
 .DS_Store
 Thumbs.db
 .env
+
+# Runtime/data files created by the alpha server
+pledges.json
+applications.json
+
+# Backups and temp
+*.tmp
+*.bak
+

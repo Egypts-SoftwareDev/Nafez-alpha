@@ -14,53 +14,80 @@
     <!-- Navigation bar -->
     <header class="navbar">
       <div class="nav-left">
-        <a href="/alpha/campaign/new" class="nav-link">Start a campaign</a>
+        <div class="nav-left-top">
+          <a href="/alpha/landing" class="nav-link">Landing</a>
+          <a href="/alpha/apply" class="nav-link">Start a campaign</a>
+        </div>
+        <div class="nav-search">
+          <input type="text" id="navSearch" placeholder="Search projects..." aria-label="Search projects" />
+        </div>
       </div>
       <div class="nav-center">
-        <!-- Centered Nafez logo -->
-        <img src="/alpha/public/images/nafez-logo.png" alt="Nafez logo" class="nafez-logo" />
+        <!-- Centered Nafez logo (click to go to Landing) with bulge -->
+        <div class="nav-logo-bulge">
+          <a href="/alpha/landing" aria-label="Go to landing homepage">
+            <img src="/alpha/public/images/nafez-logo.png" alt="Nafez logo" class="nafez-logo" />
+          </a>
+        </div>
       </div>
       <div class="nav-right">
-        <a href="/alpha/home" class="nav-link">How it works</a>
+        <div class="nav-item">
+          <a href="/alpha/home" class="nav-link">How it works</a>
+          <div class="nav-sub" aria-label="How it works sub links">
+            <a href="/alpha/home#seekers" class="nav-sub-link seekers">Seekers</a>
+            <a href="/alpha/home#backers" class="nav-sub-link backers">Backers</a>
+          </div>
+        </div>
         <span class="separator">|</span>
-        <a href="/alpha/login" class="nav-link">Sign in</a>
+        <a href="/alpha/pledges" class="nav-link">My pledges</a>
+        <span class="separator">|</span>
+        <div class="nav-item">
+          <a href="/alpha/login" class="nav-link">Sign in</a>
+          <div class="nav-sub nav-toggle" aria-label="Theme toggle">
+            <label class="switch" title="Toggle dark/light">
+              <input type="checkbox" id="themeSwitch" aria-label="Toggle dark mode">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
     </header>
 
     <!-- Main content container -->
     <main class="main-container">
       <div class="content-left">
-        <!-- View toggles and filter bar -->
-        <div class="view-filter-bar">
-          <div class="view-toggle">
-            <button class="icon-btn" title="List view">
-              <img src="/alpha/public/images/list-icon.png" alt="List view" />
-            </button>
-            <button class="icon-btn" title="Grid view">
-              <img src="/alpha/public/images/grid-icon.png" alt="Grid view" />
-            </button>
-          </div>
-          <div class="filter-labels">
-            <span class="filter active">Featured</span>
-            <span class="filter">Backed</span>
-          </div>
-          <div class="search-bar">
-            <button class="icon-btn" title="Previous">
-              <img src="/alpha/public/images/arrow-left.png" alt="Prev" />
-            </button>
-            <input type="text" placeholder="Search projects..." />
-            <button class="icon-btn" title="Next">
-              <img src="/alpha/public/images/arrow-right.png" alt="Next" />
-            </button>
-          </div>
+        <!-- Rectangle 4: Featured/Backed carousel placeholder with arrows -->
+        <div class="feature-rail" aria-label="Featured/backed carousel placeholder">
+          <button class="rail-btn" type="button" aria-label="Previous slide">‹</button>
+          <div class="featured-placeholder">Featured / Backed carousel placeholder</div>
+          <button class="rail-btn" type="button" aria-label="Next slide">›</button>
         </div>
 
-        <!-- Placeholder categories row -->
-        <div class="categories-row">
-          <div class="category-card"></div>
-          <div class="category-card"></div>
-          <div class="category-card"></div>
-          <div class="category-card"></div>
+        <!-- Rectangle 3: Padded bar wrapping rectangle 1 (controls) and rectangle 2 (category carousel) -->
+        <div class="top-feed-bar">
+          <!-- Rectangle 1: Feed/For You toggle and List/Grid toggle -->
+          <div class="controls-panel">
+            <div class="filter-labels">
+              <span class="filter active">Feed</span>
+              <span class="filter">For You</span>
+            </div>
+            <div class="view-toggle">
+              <button class="icon-btn" title="List view">
+                <img src="/alpha/public/images/list-icon.png" alt="List view" />
+              </button>
+              <button class="icon-btn" title="Grid view">
+                <img src="/alpha/public/images/grid-icon.png" alt="Grid view" />
+              </button>
+            </div>
+          </div>
+          <!-- Rectangle 2: Categories carousel -->
+          <div class="categories-panel" aria-label="Categories carousel">
+            <button class="cat-btn cat-prev" type="button" aria-label="Previous categories">‹</button>
+            <div class="categories-carousel" id="categoriesViewport" tabindex="0" aria-label="Categories list (scroll horizontally with mouse wheel)">
+              <div class="categories-row" id="categoriesRow"></div>
+            </div>
+            <button class="cat-btn cat-next" type="button" aria-label="Next categories">›</button>
+          </div>
         </div>
 
         <!-- Campaign cards will be dynamically rendered into this container
@@ -68,42 +95,65 @@
         <div id="campaigns-container" class="campaigns"></div>
       </div>
       <div class="content-right">
-        <!-- Ad spaces on the right side -->
-        <div class="ad-space"></div>
-        <div class="ad-space"></div>
+        <!-- Placeholder ad on the same row as the search bar -->
+        <div class="sidebar-card ad-card" aria-label="Advertisement placeholder">Ad Space</div>
+        <!-- Sticky stack: calendar + checklist scroll together and never overlap -->
+        <div class="sticky-stack" id="rightSticky">
+          <!-- Intizam-themed calendar -->
+          <div class="sidebar-card calendar-card">
+            <div class="calendar-brand"><img src="/alpha/public/images/Intizam-Gw.png" alt="Intizam" /></div>
+            <div class="calendar" id="intizamCalendar">
+              <div class="calendar-header">
+                <button class="cal-btn" id="calPrev" aria-label="Previous month">‹</button>
+                <div class="cal-title"><span id="calMonth"></span> <span id="calYear"></span></div>
+                <button class="cal-btn" id="calNext" aria-label="Next month">›</button>
+              </div>
+              <div class="calendar-grid" id="calGrid" aria-labelledby="calMonth calYear" role="grid"></div>
+            </div>
+          </div>
+          <!-- Mode checklist -->
+          <div class="sidebar-card checklist-card">
+            <div class="toggle-row">
+              <button class="toggle-btn active" data-role="seeker" id="roleSeeker">Seeker</button>
+              <button class="toggle-btn" data-role="backer" id="roleBacker">Backer</button>
+            </div>
+            <ul class="checklist" id="roleChecklist"></ul>
+          </div>
+        </div>
+        <div id="rightStickySpacer"></div>
       </div>
     </main>
 
     <!-- JavaScript for any interactive behaviour (optional) -->
     <script src="/alpha/public/js/script.js"></script>
-    <!-- Reuse the same footer from the landing page to provide
-         consistent navigation and legal links across the platform. -->
+    <script defer src="/alpha/public/js/theme.js"></script>
+    <!-- Footer (mirrors the landing page footer) -->
     <footer>
       <div class="footer-links">
         <div class="column">
           <h4>Discover</h4>
           <ul>
-            <li><a href="#">Crowdfunding</a></li>
-            <li><a href="#">Fixed vs Flexible</a></li>
-            <li><a href="#">Intizam</a></li>
+            <li><a href="/crowdfunding.html">Crowdfunding</a></li>
+            <li><a href="/fixed-vs-flexible.html">Fixed vs Flexible</a></li>
+            <li><a href="/intizam.html">Intizam</a></li>
           </ul>
         </div>
         <div class="column">
           <h4>About</h4>
           <ul>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Trust &amp; Safety</a></li>
-            <li><a href="#">Help &amp; Support</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="/about-us.html">About us</a></li>
+            <li><a href="/trust-safety.html">Trust &amp; Safety</a></li>
+            <li><a href="/help-support.html">Help &amp; Support</a></li>
+            <li><a href="/careers.html">Careers</a></li>
+            <li><a href="/contact-us.html">Contact Us</a></li>
           </ul>
         </div>
         <div class="column">
           <h4>Entrepreneurs</h4>
           <ul>
-            <li><a href="#">How it works</a></li>
-            <li><a href="#">Us vs Competitors</a></li>
-            <li><a href="#">Education Center</a></li>
+            <li><a href="/how-it-works.html">How it works</a></li>
+            <li><a href="/us-vs-competitors.html">Us vs Competitors</a></li>
+            <li><a href="/education-center.html">Education Center</a></li>
           </ul>
         </div>
         <div class="column signup-inline">
@@ -114,13 +164,13 @@
       <div class="bottom-bar">
         <div class="bottom-left">
           <img src="/alpha/public/images/nafez-logo.png" alt="Nafez small logo" class="bottom-logo" />
-          <span>&copy; <span id="year-alpha"></span> Nafez &amp; Co. All rights reserved.</span>
+          <span>&copy; <span id="year"></span> Nafez &amp; Co. All rights reserved.</span>
         </div>
         <div class="bottom-middle">
-          <a href="#">Terms</a>
-          <a href="#">Privacy</a>
-          <a href="#">Cookies</a>
-          <a href="#">Accessibility</a>
+          <a href="/terms.html">Terms</a>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/cookies.html">Cookies</a>
+          <a href="/accessibility.html">Accessibility</a>
         </div>
         <div class="bottom-right">
           Powered by

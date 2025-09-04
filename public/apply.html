@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apply — Start a Campaign</title>
+    <link rel="stylesheet" href="/alpha/public/css/styles.css" />
+    <link rel="icon" type="image/png" href="/alpha/public/images/nafez-logo.png" />
+    <style>
+      .steps { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 12px 0; }
+      .step { padding: 6px 10px; border-radius: 999px; border: 1px solid #263244; color: #8fa1b2; font-size: 13px; }
+      .step.active { color: #0a1522; background: #cfe468; border-color: #9fb63c; }
+      .actions { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; }
+      .actions .primary { background: #cfe468; color: #0a1522; border: 1px solid #9fb63c; padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+      .actions .secondary { background: transparent; color: #cfe468; border: 1px solid #9fb63c; padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+      label { display: block; color: #8fa1b2; margin: 8px 0 4px; }
+      input, select, textarea { width: 100%; color: #f5f5f5; background: #0d1a2c; border: 1px solid #263244; border-radius: 8px; padding: 10px 12px; }
+      textarea { min-height: 100px; }
+      .hint { font-size: 12px; color: #8fa1b2; }
+      .error { color: #ff6b6b; font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="nav-left">
+        <a href="/alpha/landing" class="nav-link">Landing</a>
+        <a href="/alpha/home" class="nav-link">Home</a>
+      </div>
+      <div class="nav-center">
+        <div class="nav-logo-bulge">
+          <a href="/alpha/landing" aria-label="Go to landing homepage">
+            <img src="/alpha/public/images/nafez-logo.png" alt="Nafez logo" class="nafez-logo" />
+          </a>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="/alpha/pledges" class="nav-link">My pledges</a>
+        <span class="separator">|</span>
+        <a href="/alpha/logout" class="nav-link">Logout</a>
+        <span class="separator">|</span>
+        <button id="themeToggle" class="nav-link" type="button" aria-label="Toggle theme">Dark</button>
+      </div>
+    </header>
+    <main class="form-wrapper">
+      <h2>Start a Campaign — Application</h2>
+      <div id="inline-errors" class="error" role="alert" aria-live="polite" style="min-height:1em; text-align:center;"></div>
+      <div class="steps" id="steps">
+        <span class="step" data-step="0">Basics</span>
+        <span class="step" data-step="1">Identity</span>
+        <span class="step" data-step="2">Story</span>
+        <span class="step" data-step="3">Rewards</span>
+        <span class="step" data-step="4">Review</span>
+      </div>
+      <form id="apply-form">
+        <input type="hidden" id="app-id" />
+        <!-- Step 0: Basics -->
+        <section data-step="0">
+          <div class="grid-2">
+            <div>
+              <label for="title">Title</label>
+              <input id="title" name="title" required />
+              <div class="hint">A clear, concise name for your project.</div>
+            </div>
+            <div>
+              <label for="category">Category</label>
+              <select id="category" name="category">
+                <option>Tech startup</option>
+                <option>Small Business</option>
+                <option>Medium Business</option>
+                <option>Art & Design</option>
+                <option>Education</option>
+                <option>Community</option>
+              </select>
+            </div>
+            <div>
+              <label for="locationGov">Governorate</label>
+              <select id="locationGov" name="locationGov"></select>
+            </div>
+            <div>
+              <label for="locationCity">City</label>
+              <input id="locationCity" name="locationCity" list="citiesList" placeholder="Start typing..." />
+              <datalist id="citiesList"></datalist>
+            </div>
+            <div>
+              <label for="fundingModel">Funding Model</label>
+              <select id="fundingModel" name="fundingModel">
+                <option value="fixed">Fixed (all-or-nothing)</option>
+                <option value="flexible">Flexible</option>
+              </select>
+            </div>
+            <div>
+              <label for="goalEGP">Goal (EGP)</label>
+              <input id="goalEGP" name="goalEGP" type="number" min="1000" step="100" required />
+            </div>
+            <div>
+              <label for="durationDays">Duration (days)</label>
+              <input id="durationDays" name="durationDays" type="number" min="10" max="60" value="30" />
+            </div>
+          </div>
+        </section>
+        <!-- Step 1: Identity -->
+        <section data-step="1" hidden>
+          <div class="grid-2">
+            <div>
+              <label for="name">Full name</label>
+              <input id="name" name="name" required />
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" placeholder="e.g. 0100 123 4567" />
+            </div>
+            <div>
+              <label for="nationalId">National ID</label>
+              <input id="nationalId" name="nationalId" required />
+            </div>
+            <div>
+              <label for="entityType">Entity (optional)</label>
+              <select id="entityType" name="entityType">
+                <option value="">Individual</option>
+                <option value="sole">Sole Proprietor</option>
+                <option value="llc">LLC</option>
+                <option value="jsc">JSC</option>
+              </select>
+            </div>
+            <div>
+              <label for="crn">Commercial Reg. No (CRN)</label>
+              <input id="crn" name="crn" />
+            </div>
+            <div>
+              <label for="taxId">Tax ID</label>
+              <input id="taxId" name="taxId" />
+            </div>
+          </div>
+        </section>
+        <!-- Step 2: Story -->
+        <section data-step="2" hidden>
+          <label for="pitch">Short pitch</label>
+          <input id="pitch" name="pitch" maxlength="140" />
+          <label for="description">Full description</label>
+          <textarea id="description" name="description"></textarea>
+          <label for="videoUrl">Video URL (YouTube/Vimeo)</label>
+          <input id="videoUrl" name="videoUrl" />
+        </section>
+        <!-- Step 3: Rewards (simple v1) -->
+        <section data-step="3" hidden>
+          <div id="rewards"></div>
+          <button type="button" class="secondary" id="add-reward">Add reward tier</button>
+        </section>
+        <!-- Step 4: Review -->
+        <section data-step="4" hidden>
+          <div id="review"></div>
+          <div class="error" id="errors"></div>
+        </section>
+        <div class="actions">
+          <button type="button" class="secondary" id="back">Back</button>
+          <div>
+            <button type="button" class="secondary" id="save">Save draft</button>
+            <button type="button" class="primary" id="next">Next</button>
+            <button type="button" class="primary" id="submit" hidden>Submit</button>
+          </div>
+        </div>
+      </form>
+    </main>
+    <script src="/alpha/public/js/apply.js"></script>
+    <script defer src="/alpha/public/js/theme.js"></script>
+  </body>
+  </html>
