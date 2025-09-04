@@ -57,6 +57,7 @@ const LANDING_ORIGIN = process.env.LANDING_ORIGIN || 'http://localhost:3000';
 // file from this directory.  Assets include HTML, CSS, JS and images.
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const PLEDGES_FILE = path.join(__dirname, 'pledges.json');
+const UPLOADS_DIR = path.join(PUBLIC_DIR, 'uploads');
 
 // Read JSON helper (tolerates UTF-8 BOM from some editors)
 function readJsonNoBom(file, fallback) {
@@ -96,6 +97,7 @@ function ensureFile(filePath, emptyJson) {
 }
 ensureFile(APPS_FILE, []);
 ensureFile(PLEDGES_FILE, []);
+try { if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true }); } catch (_) {}
 
 function readApplications() { return readJsonNoBom(APPS_FILE, []); }
 
@@ -235,6 +237,7 @@ function renderCampaignPage(c) {
     } catch { return ''; }
   }
   const embedHtml = getEmbed((c.story && c.story.videoUrl) || c.videoUrl);
+  const imgFallback = (c.imageUrl ? `<img src="${c.imageUrl}" alt="${c.title}">` : `<img src="/alpha/public/images/campaign-placeholder.png" alt="${c.title}">`);
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -273,7 +276,7 @@ function renderCampaignPage(c) {
         <div>
           <div class="media">
             <div class="frame">
-              ${embedHtml || `<img src="/alpha/public/images/campaign-placeholder.png" alt="${c.title}">`}
+              ${embedHtml || imgFallback}
             </div>
             <div class="caption">${((c.story && c.story.videoUrl) || c.videoUrl) ? 'Campaign video' : 'Campaign image placeholder'}</div>
           </div>
@@ -762,6 +765,60 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ campaigns }));
     return;
   }
+  // Upload endpoint: accepts PUT/POST with raw file body and optional filename
+  if ((req.method === 'PUT' || req.method === 'POST') && parsedUrl.pathname === '/alpha/api/upload') {
+    if (!isAuthenticated) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const contentType = (req.headers['content-type'] || '').toLowerCase();
+    const origName = decodeURIComponent(parsedUrl.query.filename || '') || (req.headers['x-filename'] || 'upload');
+    const maxBytes = 25 * 1024 * 1024; // 25 MB
+    const allowed = new Set(['image/png','image/jpeg','image/jpg','image/webp','image/gif','video/mp4','video/webm']);
+    const isAllowed = allowed.has(contentType);
+    // Extension by mime
+    const extMap = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/jpg': '.jpg', 'image/webp': '.webp', 'image/gif': '.gif', 'video/mp4': '.mp4', 'video/webm': '.webm' };
+    const safeBase = String(origName).replace(/[^a-zA-Z0-9-_\.]+/g, '_').slice(0, 48) || 'file';
+    const stamp = Date.now();
+    const ext = extMap[contentType] || (safeBase.includes('.') ? ('.' + safeBase.split('.').pop()) : '');
+    const isVideo = contentType.startsWith('video/');
+    const prefix = isVideo ? 'vid' : 'img';
+    const fileName = `${prefix}-${stamp}${ext || ''}`;
+    const filePath = path.join(UPLOADS_DIR, fileName);
+    if (!isAllowed) { res.writeHead(415, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unsupported Media Type' })); return; }
+    let received = 0;
+    const out = fs.createWriteStream(filePath);
+    let aborted = false;
+    req.on('data', (chunk) => {
+      received += chunk.length;
+      if (received > maxBytes) { aborted = true; out.destroy(); req.destroy(); }
+    });
+    req.pipe(out);
+    out.on('finish', () => {
+      if (aborted) { try { fs.unlinkSync(filePath); } catch(_){}; res.writeHead(413, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'File too large' })); return; }
+      const urlPath = `/alpha/public/uploads/${fileName}`;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ url: urlPath, kind: isVideo ? 'video' : 'image' }));
+    });
+    out.on('error', (e) => { try { fs.unlinkSync(filePath); } catch(_){}; res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Write failed' })); });
+    return;
+  }
+  // Update campaign media (imageUrl / videoUrl)
+  const mediaMatch = parsedUrl.pathname.match(/^\/alpha\/api\/campaigns\/(\d+)\/media$/);
+  if (req.method === 'POST' && mediaMatch) {
+    if (!isAuthenticated) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const id = parseInt(mediaMatch[1], 10);
+    parseJsonBody(req, (err, body) => {
+      if (err || !body || (typeof body !== 'object')) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Invalid JSON' })); return; }
+      let campaigns = readCampaigns();
+      const idx = campaigns.findIndex((c) => c.id === id);
+      if (idx === -1) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Campaign not found' })); return; }
+      const c = campaigns[idx];
+      if (body.imageUrl) c.imageUrl = String(body.imageUrl);
+      if (body.videoUrl) { c.videoUrl = String(body.videoUrl); c.story = c.story || {}; c.story.videoUrl = c.videoUrl; }
+      campaigns[idx] = c;
+      writeCampaigns(campaigns);
+      res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ campaign: c }));
+    });
+    return;
+  }
   // Simple simulator endpoints to toggle pledge status during alpha testing
   const simMatch = parsedUrl.pathname.match(/^\/alpha\/api\/sim\/payments\/(\d+)(?:\/(succeed|fail|cancel))?$/);
   if ((req.method === 'POST' || req.method === 'GET') && simMatch) {
@@ -827,6 +884,74 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(renderNewCampaignPage());
     return;
+  }
+  if (req.method === 'GET' && parsedUrl.pathname === '/alpha/admin/media') {
+    if (!isAuthenticated) { res.writeHead(302, { Location: '/alpha/login?next=/alpha/admin/media' }); res.end(); return; }
+    const campaigns = readCampaigns();
+    const page = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Media Manager</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <style>
+        body{font-family:'Tomorrow',Arial,sans-serif;background:#0a1522;color:#f5f5f5;margin:0;padding:1rem;}
+        h1{color:#cfe468;margin-top:0}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+        .card{background:#112240;border:1px solid #263244;border-radius:10px;padding:12px}
+        .row{display:flex;gap:8px;align-items:center;margin-top:6px}
+        input[type=url]{flex:1;background:#0d1a2c;border:1px solid #263244;border-radius:8px;padding:8px 10px;color:#f5f5f5}
+        input[type=file]{color:#cfe468}
+        button{background:#cfe468;border:1px solid #9fb63c;color:#0a1522;border-radius:8px;padding:8px 12px;cursor:pointer}
+        img{width:100%;height:140px;object-fit:cover;border-radius:6px;border:1px solid #263244;background:#0d1a2c}
+        .url{font-size:12px;color:#8fa1b2;word-break:break-all}
+      </style></head><body>
+      <a href="/alpha/home" style="color:#cfe468;text-decoration:none">← Back</a>
+      <h1>Media Manager</h1>
+      <div class="grid">
+      ${campaigns.map(c=>`<div class='card'><div style='font-weight:700'>${c.title}</div>
+        <img src='${c.imageUrl||'/alpha/public/images/campaign-placeholder.png'}' alt='${c.title}'>
+        <div class='url'>${c.imageUrl||''}</div>
+        <div class='row'><input type='file' accept='image/*' data-cid='${c.id}' class='up-img'><button data-cid='${c.id}' class='save-img'>Upload image</button></div>
+        <div class='row'><input type='url' placeholder='YouTube/Vimeo URL' value='${(c.story&&c.story.videoUrl)||c.videoUrl||''}' data-cid='${c.id}' class='vid-url'><button data-cid='${c.id}' class='save-vid'>Save video URL</button></div>
+      </div>`).join('')}
+      </div>
+      <script>
+        (function(){
+          async function upload(file, cid){
+            const res = await fetch('/alpha/api/upload?filename='+encodeURIComponent(file.name), { method:'PUT', headers:{ 'Content-Type': file.type }, body:file });
+            if (!res.ok) throw new Error('Upload failed');
+            const data = await res.json();
+            const payload = (data.kind==='video') ? { videoUrl: data.url } : { imageUrl: data.url };
+            const r2 = await fetch('/alpha/api/campaigns/'+cid+'/media', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            if (!r2.ok) throw new Error('Update failed');
+            return await r2.json();
+          }
+          document.querySelectorAll('.save-img').forEach(btn=>{
+            btn.addEventListener('click', async ()=>{
+              const cid = btn.getAttribute('data-cid');
+              const input = document.querySelector(".up-img[data-cid='"+cid+"']");
+              if (!input || !input.files || !input.files[0]) { alert('Choose an image first.'); return; }
+              btn.disabled=true; const old=btn.textContent; btn.textContent='Uploading...';
+              try { await upload(input.files[0], cid); location.reload(); } catch(e){ alert(e.message); }
+              finally { btn.disabled=false; btn.textContent=old; }
+            });
+          });
+          document.querySelectorAll('.save-vid').forEach(btn=>{
+            btn.addEventListener('click', async ()=>{
+              const cid = btn.getAttribute('data-cid');
+              const input = document.querySelector(".vid-url[data-cid='"+cid+"']");
+              const url = (input && input.value || '').trim();
+              if (!url) { alert('Enter a video URL'); return; }
+              btn.disabled=true; const old=btn.textContent; btn.textContent='Saving...';
+              try {
+                const r = await fetch('/alpha/api/campaigns/'+cid+'/media', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ videoUrl: url }) });
+                if (!r.ok) throw new Error('Save failed'); location.reload();
+              } catch(e){ alert(e.message); }
+              finally { btn.disabled=false; btn.textContent=old; }
+            });
+          });
+        })();
+      </script>
+      </body></html>`;
+    res.writeHead(200, { 'Content-Type': 'text/html' }); res.end(page); return;
   }
   if (req.method === 'POST' && parsedUrl.pathname === '/alpha/campaign') {
     parseBody(req, (body) => {
