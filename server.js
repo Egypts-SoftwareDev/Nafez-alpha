@@ -551,13 +551,8 @@ const server = http.createServer((req, res) => {
   // Authentication routes
   // -------------------------------------------------------------------
   if (req.method === 'GET' && parsedUrl.pathname === '/alpha/login') {
-    // Serve the email/password login page.  If already authenticated
-    // (either as admin or user), redirect to home.
-    if (isAuthenticated) {
-      res.writeHead(302, { Location: '/alpha/home' });
-      res.end();
-      return;
-    }
+    // Serve the email/password login page.  Allow access even if
+    // already authenticated so users can switch accounts.
     const loginPage = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -640,12 +635,8 @@ const server = http.createServer((req, res) => {
     return;
   }
   if (req.method === 'GET' && parsedUrl.pathname === '/alpha/signup') {
-    // Serve sign‑up page.  If already authenticated, redirect to home.
-    if (isAuthenticated) {
-      res.writeHead(302, { Location: '/alpha/home' });
-      res.end();
-      return;
-    }
+    // Serve sign‑up page. Allow access even when already authenticated
+    // to enable creating additional test users.
       const signupPage = `<!DOCTYPE html>
       <html lang="en">
     <head>
