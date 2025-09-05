@@ -124,11 +124,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Deterministic estimated shipping date based on campaign attributes
+  function computeDaysLeft(c) {
+    const base = Number(c.daysLeft || 0);
+    const minBoost = 30 + ((Number(c.id || 1) * 19) % 21); // 30..50
+    return Math.max(base, minBoost);
+  }
+
   function computeShippingDate(c) {
     try {
       const base = new Date();
       const id = Number(c.id || 1);
-      const daysLeft = Number(c.daysLeft || 30);
+      const daysLeft = computeDaysLeft(c);
       // Offset: daysLeft plus 30..90 days pseudo-randomized by id
       const extra = 30 + ((id * 37) % 61); // 30..90
       const offset = Math.max(30, daysLeft) + extra;
@@ -271,6 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const imgSrc = (c.imageUrl && typeof c.imageUrl === 'string') ? c.imageUrl : '/alpha/public/images/campaign-placeholder.png';
         const shipDate = computeShippingDate(c);
         const shipLabel = formatMonthYear(shipDate);
+        const daysLeft = computeDaysLeft(c);
+        const roundEnds = new Date(Date.now() + daysLeft * 24 * 60 * 60 * 1000);
+        const roundEndsLabel = roundEnds.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         return `
           <div class="campaign-card" data-campaign-id="${c.id}" role="button" tabindex="0" aria-label="Open ${c.title}">
             <div class="media-col">
@@ -287,8 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="pct-badge">${pct}%</div>
               </div>
               <div class="deadline-info">
-                <span>${c.daysLeft} days left</span>
-                <span>Round ends: TBD</span>
+                <span>${daysLeft} days left</span>
+                <span>Round ends: ${roundEndsLabel}</span>
               </div>
             </div>
             <div class="info-col">
@@ -489,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.nafezCal = {
       add: function(events){
         try {
-          (events||[]).forEach((e)=>{ if (!e || !e.key) return; if (!eventDays[e.key]) eventDays[e.key]=[]; eventDays[e.key].push({ title: e.title, days: e.days }); });
+          (events||[]).forEach((e)=>{ if (!e || !e.key) return; if (!eventDays[e.key]) eventDays[e.key]=[]; if (!eventDays[e.key].some(x=>x.title===e.title)) eventDays[e.key].push({ title: e.title, days: e.days }); });
           render();
         } catch(_) {}
       },

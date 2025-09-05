@@ -5,8 +5,8 @@
     "owner": "Omar A.",
     "description": "The Egyptian-made home theatre system. Support local production and pre-order this 100% Egyptian full surround-sound Dolby Atmos approved home theatre system.",
     "goal": 50000,
-    "raised": 25048,
-    "backers": 49,
+    "raised": 28048,
+    "backers": 50,
     "stage": "Concept",
     "daysLeft": 23,
     "isFeatured": true,
@@ -31,7 +31,8 @@
         "description": "Soundbar + 3 pyramid speakers",
         "amountEGP": 3000
       }
-    ]
+    ],
+    "imageUrl": "/alpha/public/uploads/img-1756994668289.jpg"
   },
   {
     "id": 2,
@@ -65,7 +66,8 @@
         "description": "10 purifier bottles for a village",
         "amountEGP": 1000
       }
-    ]
+    ],
+    "imageUrl": "/alpha/public/uploads/img-1757026449058.png"
   },
   {
     "id": 3,
@@ -78,7 +80,8 @@
     "stage": "Prototype",
     "daysLeft": 28,
     "isFeatured": true,
-    "category": "Agriculture"
+    "category": "Agriculture",
+    "imageUrl": "/alpha/public/uploads/img-1757026265362.png"
   },
   {
     "id": 4,
@@ -91,7 +94,8 @@
     "stage": "Concept",
     "daysLeft": 35,
     "isFeatured": false,
-    "category": "Technology"
+    "category": "Technology",
+    "imageUrl": "/alpha/public/uploads/img-1757026081557.png"
   },
   {
     "id": 5,
@@ -124,7 +128,8 @@
         "description": "Backpack + accessory kit",
         "amountEGP": 1200
       }
-    ]
+    ],
+    "imageUrl": "/alpha/public/uploads/img-1757025884806.png"
   },
   {
     "id": 6,
@@ -137,7 +142,8 @@
     "stage": "Prototype",
     "daysLeft": 41,
     "isFeatured": false,
-    "category": "Community"
+    "category": "Community",
+    "imageUrl": "/alpha/public/uploads/img-1757025649385.png"
   },
   {
     "id": 7,
@@ -150,7 +156,8 @@
     "stage": "Idea",
     "daysLeft": 29,
     "isFeatured": true,
-    "category": "Mobility"
+    "category": "Mobility",
+    "imageUrl": "/alpha/public/uploads/img-1757025373692.png"
   },
   {
     "id": 8,
@@ -184,7 +191,8 @@
         "description": "Limited edition flavors",
         "amountEGP": 900
       }
-    ]
+    ],
+    "imageUrl": "/alpha/public/uploads/img-1757025156606.png"
   },
   {
     "id": 9,
@@ -197,7 +205,8 @@
     "stage": "Running",
     "daysLeft": 22,
     "isFeatured": true,
-    "category": "Agriculture"
+    "category": "Agriculture",
+    "imageUrl": "/alpha/public/uploads/img-1757024922115.png"
   },
   {
     "id": 10,
@@ -230,7 +239,8 @@
         "description": "Dualâ€‘extruder kit + enclosure",
         "amountEGP": 3500
       }
-    ]
+    ],
+    "imageUrl": "/alpha/public/uploads/img-1757024603843.png"
   },
   {
     "id": 11,
@@ -243,7 +253,8 @@
     "stage": "Running",
     "daysLeft": 25,
     "isFeatured": true,
-    "category": "Health"
+    "category": "Health",
+    "imageUrl": "/alpha/public/uploads/img-1757023600853.png"
   },
   {
     "id": 12,
@@ -255,7 +266,8 @@
     "backers": 264,
     "stage": "Concept",
     "daysLeft": 33,
-    "isFeatured": false
+    "isFeatured": false,
+    "imageUrl": "/alpha/public/uploads/img-1757023418506.png"
   },
   {
     "id": 13,
@@ -288,7 +300,8 @@
         "description": "Seasonâ€‘long mapping & reports",
         "amountEGP": 5000
       }
-    ]
+    ],
+    "imageUrl": "/alpha/public/uploads/img-1757022140271.png"
   },
   {
     "id": 14,
@@ -300,7 +313,8 @@
     "backers": 159,
     "stage": "Running",
     "daysLeft": 17,
-    "isFeatured": false
+    "isFeatured": false,
+    "imageUrl": "/alpha/public/uploads/img-1757020395491.png"
   },
   {
     "id": 15,
@@ -308,10 +322,11 @@
     "owner": "HealthHub Cairo",
     "description": "A lightweight web + kiosk system that schedules patient visits by time slots and notifies via WhatsApp to reduce waiting rooms.",
     "goal": 68000,
-    "raised": 22740,
-    "backers": 121,
+    "raised": 25660,
+    "backers": 124,
     "stage": "Concept",
     "daysLeft": 21,
-    "isFeatured": true
+    "isFeatured": true,
+    "imageUrl": "/alpha/public/uploads/img-1757016970117.png"
   }
 ]
